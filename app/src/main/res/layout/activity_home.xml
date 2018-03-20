@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/total"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="23dp"
+    tools:context="com.example.android.team49.HomeActivity">
+
+    <LinearLayout
+        android:id="@+id/layoutVert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/colorPrimary">
+
+            <LinearLayout
+                android:id="@+id/layoutView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layoutViewIcons"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/dark_turq_circle"
+                        android:backgroundTint="@color/buttonColor"
+                        android:padding="1dp"
+                        android:src="@drawable/fruit_icon_black"
+                        android:elevation="3dp"/>
+
+                    <TextView
+                        android:id="@+id/tvView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="View"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/dividerView"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="#ffffff" />
+
+                <TextView
+                    android:id="@+id/tvViewInfo"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="check what's currently in your fridge"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+
+            android:id="@+id/cardScan"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/colorPrimary">
+
+            <LinearLayout
+                android:id="@+id/layoutScan"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layoutScanIcon"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/dark_turq_circle"
+                        android:backgroundTint="@color/buttonColor"
+                        android:elevation="3dp"
+                        android:padding="7dp"
+                        android:src="@drawable/barcode_icon" />
+
+                    <TextView
+                        android:id="@+id/tvScan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Scan"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/dividerScan"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="#ffffff" />
+
+                <TextView
+                    android:id="@+id/tvScanInfo"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Scan new items"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+
+            android:id="@+id/cardRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/colorPrimary">
+
+            <LinearLayout
+                android:id="@+id/layoutRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layoutRecipeIcon"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/dark_turq_circle"
+                        android:backgroundTint="@color/buttonColor"
+                        android:elevation="3dp"
+                        android:padding="7dp"
+                        android:src="@drawable/list_icon_24dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Recipes"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/dividerRecipe"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="#ffffff" />
+
+                <TextView
+                    android:id="@+id/tvRecipe"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Check out some suggested recipes!"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <!--
+        <android.support.v7.widget.CardView
+
+            android:id="@+id/cardOrder"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/colorPrimary">
+
+            <LinearLayout
+                android:id="@+id/layoutOrder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/layoutOrderIcon"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/dark_turq_circle"
+                        android:backgroundTint="@color/buttonColor"
+                        android:elevation="3dp"
+                        android:padding="7dp"
+                        android:src="@drawable/basket_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Quick Order"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/dividerOrder"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="#ffffff" />
+
+                <TextView
+                    android:id="@+id/tvOrder"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Quickly Order items to restock your fridge!"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="bold"/>
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        -->
+    </LinearLayout>
+
+</LinearLayout>

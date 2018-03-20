@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Team 49</string>
     <string name="login">LOGIN</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="pin">Pin</string>
     <string name="login_button">Login</string>
+    <string name="register">REGISTER</string>
     <string name="register_button">Register</string>
     <string name="or_text">OR</string>
+    <string name="registered">Already Registered? Click here.</string>
+    <string name="confirm">Confirm Pin</string>
 
     <string name="facebook_app_id">594694270867248</string>
     <string name="fb_login_protocol_scheme">fb594694270867248</string>

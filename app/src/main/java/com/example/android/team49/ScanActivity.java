@@ -16,7 +16,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
-public class ScanActivity extends AppCompatActivity {
+public class ScanActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
