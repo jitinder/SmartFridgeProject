@@ -16,18 +16,28 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".LoginActivity"></activity>
         <activity
-            android:name=".ScanActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".DataEntryActivity">
-
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ScanActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ViewActivity"></activity>
+        <activity android:name=".DataEntryActivity"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

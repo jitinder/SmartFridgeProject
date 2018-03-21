@@ -20,9 +20,12 @@
         android:scaleType="centerCrop" />
 
     <LinearLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -96,8 +99,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="14"
-                        android:hint="@string/password"
-                        android:maxLength="25"
+                        android:hint="@string/pin"
+                        android:maxLength="4"
+                        android:inputType="numberPassword"
                         android:textAlignment="center" />
 
                 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.android.team49;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.login.Login;
@@ -77,23 +79,30 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_google:
-                signIn();
+                //signIn();
                 break;
             case R.id.button_register:
                 register();
                 break;
             case R.id.button_login:
-                login(0);//pin input;
+                String pin = etPassword.getText().toString();
+                String username = etUsername.getText().toString();
+                if(pin.equals("") || username.equals("")){
+                    signInError();
+                } else {
+                    int finalPin = Integer.parseInt(pin);
+                    login(finalPin, username);//pin input;
+                }
                 break;
         }
     }
 
-    private void login(final Integer pin) {
+    private void login(final int pin, final String username) {
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
             pinTable = msc.getTable(PinAccess.class);
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
 
@@ -108,14 +117,12 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                             @Override
                             public void run() {
                                 //mAdapter.clear();
-                                if(results.size() != 0){
+                                if(results.size() != 0 && results.get(0).getName().equalsIgnoreCase(username)){
                                     home();
                                     login_state.edit().putBoolean("logged",true).apply();
                                 }
                                 else{
-                                    Toast.makeText(LoginActivity.this, "Pin incorrect!", Toast.LENGTH_LONG).show();
-                                    refresh();
-                                    finish();
+                                    signInError();
                                 }
                             }
                         });
@@ -133,9 +140,14 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private void signIn() {
-        //Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        //startActivityForResult(signInIntent, RC_SIGN_IN);
+    private void signInError() {
+        Toast.makeText(LoginActivity.this, "Pin incorrect!", Toast.LENGTH_LONG).show();
+        //refresh();
+        //finish();
+        etUsername.setText("");
+        etPassword.setText("");
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root_layout);
+        rootLayout.clearFocus();
     }
 
     @Override
