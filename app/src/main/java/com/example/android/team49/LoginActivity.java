@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.facebook.login.Login;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
+//import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+//import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
@@ -32,7 +32,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     private SignInButton mGoogleBtn;
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "LOGIN_ACTIVITY";
-    private GoogleSignInClient mGoogleSignInClient;
+    //private GoogleSignInClient mGoogleSignInClient;
     private Button registerButton;
     private Button loginButton;
     private EditText etUsername;
@@ -64,7 +64,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 .build();
 
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        //mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         login_state = getSharedPreferences("login",MODE_PRIVATE);
@@ -83,7 +83,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 register();
                 break;
             case R.id.button_login:
-                login()//pin input;
+                login(0);//pin input;
                 break;
         }
     }
@@ -134,8 +134,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     }
 
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        //Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        //startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -146,8 +146,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+           // Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+           // handleSignInResult(task);
         }
     }
 
