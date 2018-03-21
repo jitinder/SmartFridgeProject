@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.team49.ScanActivity"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:keepScreenOn="true">
 
-    <TextView android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtContent"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Process"
-        android:id="@+id/button" />
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.android.team49.ui.camera.CameraSourcePreview
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.example.android.team49.ui.camera.GraphicOverlay
+                android:id="@+id/graphicOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.example.android.team49.ui.camera.CameraSourcePreview>
+
+    </LinearLayout>
+
     <ImageView
+        android:id="@+id/flash_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imgview"/>
+        android:padding="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/camera_side_image_view"
+        android:src="@drawable/ic_switch_camera_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
