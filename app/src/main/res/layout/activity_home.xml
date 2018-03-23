@@ -234,7 +234,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/dark_turq_circle"
                         android:backgroundTint="@color/buttonColor"
-                        android:elevation="3dp"
+                        android:elevation="3dp"4
                         android:padding="7dp"
                         android:src="@drawable/basket_icon" />
 

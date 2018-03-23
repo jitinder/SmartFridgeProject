@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private MobileServiceClient msc;
     private List<PinAccess> results;
     private MobileServiceTable<PinAccess> pinTable;
+    private MobileServiceTable<Ingredients> ingredientsTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btRegR:
-                register(etName.getText().toString(), Integer.parseInt(etPin.getText().toString()), Integer.parseInt(etConfirmPin.getText().toString()));
+                String name = etName.getText().toString();
+                String pin = etPin.getText().toString();
+                String confirm = etConfirmPin.getText().toString();
+                if( name.equals("") || pin.equals("") || confirm.equals("")){
+                    Toast.makeText(RegisterActivity.this, "Ensure all fields are filled in", Toast.LENGTH_LONG).show();
+                    registerError();
+                }
+                else{
+                    register(name, Integer.parseInt(pin), Integer.parseInt(confirm));
+                }
                 break;
             case R.id.tvRegistered:
                 login = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -84,11 +95,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     public void register(final String name, final Integer pin, final Integer confirm) {
         final PinAccess p = new PinAccess(name, pin);
+        final Ingredients bread = new Ingredients("bread", "22/10/15", 5);
+
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
             pinTable = msc.getTable(PinAccess.class);
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+
+            @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
 
@@ -117,14 +132,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                                     else{
                                         Toast.makeText(RegisterActivity.this, "Ensure pin codes match", Toast.LENGTH_LONG)
                                                 .show();
+                                        registerError();
                                     }
 
                                 }
                                 else{
                                     Toast.makeText(RegisterActivity.this, "Pin Taken!", Toast.LENGTH_LONG).show();
-                                    Intent refresh = new Intent(RegisterActivity.this, RegisterActivity.class);
-                                    startActivity(refresh);
-                                    finish();
+                                    registerError();
                                 }
                             }
                         });
@@ -166,5 +180,15 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         } else {
             return task.execute();
         }
+    }
+
+    private void registerError() {
+        //refresh();
+        //finish();
+        etName.setText("");
+        etPin.setText("");
+        etConfirmPin.setText("");
+        LinearLayout rootLayout = (LinearLayout) this.findViewById(R.id.root_layout);
+        rootLayout.clearFocus();
     }
 }

@@ -207,7 +207,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     }
 
     private void home(){
-        Intent logged = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent logged = new Intent(LoginActivity.this, ViewActivity.class);
         startActivity(logged);
         finish();
     }
