@@ -32,10 +32,10 @@ public class ViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view);
         getIngredients();
 
-
         iAdapter = new IngredientsAdapter(this, R.layout.row_list_ingredients);
         lv = (ListView) findViewById(R.id.lvIngredients);
         lv.setAdapter(iAdapter);
+
 
 
 

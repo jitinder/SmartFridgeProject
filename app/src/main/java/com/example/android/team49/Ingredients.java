@@ -58,7 +58,7 @@ public class Ingredients {
     public DateTimeOffset getUpdatedAt() { return mUpdatedAt; }
     protected void setUpdatedAt(DateTimeOffset updatedAt) { mUpdatedAt = updatedAt; }
 
-    public Ingredients(String name, String expr, Integer quantity){
+    public Ingredients(String name, String expr, int quantity){
         this.setName(name);
         this.setExpr(expr);
         this.setQuantity(quantity);
