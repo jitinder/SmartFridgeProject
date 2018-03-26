@@ -2,6 +2,7 @@ package com.example.android.team49;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -14,8 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
@@ -24,10 +23,8 @@ import java.util.List;
 
 public class LoginActivity extends Activity implements View.OnClickListener{
 
-    private SignInButton mGoogleBtn;
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "LOGIN_ACTIVITY";
-    //private GoogleSignInClient mGoogleSignInClient;
     private Button registerButton;
     private Button loginButton;
     private EditText etUsername;
@@ -36,6 +33,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     private List<PinAccess> results;
     private MobileServiceTable<PinAccess> pinTable;
     private SharedPreferences login_state;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +42,11 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         // Build a GoogleSignInClient with the options specified by gso.
         registerButton = findViewById(R.id.button_register);
         loginButton = findViewById(R.id.button_login);
-        mGoogleBtn = findViewById(R.id.button_google);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
 
-        mGoogleBtn.setOnClickListener(LoginActivity.this);
         registerButton.setOnClickListener(LoginActivity.this);
         loginButton.setOnClickListener(LoginActivity.this);
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        //mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         login_state = getSharedPreferences("login",MODE_PRIVATE);
@@ -71,9 +58,6 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_google:
-                //signIn();
-                break;
             case R.id.button_register:
                 register();
                 break;
@@ -95,7 +79,15 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
             pinTable = msc.getTable(PinAccess.class);
+            progressDialog = new ProgressDialog(this);
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog.setMessage("Logging you in... Please wait.");
+                    progressDialog.show();
+                }
+
                 @Override
                 protected Void doInBackground(Void... params) {
 
@@ -123,13 +115,20 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                         //createAndShowDialogFromTask(e, "Error");
                         e.printStackTrace();
                     }
-
                     return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             };
             runAsyncTask(task);
         } catch (Exception e) {
-
+            Toast.makeText(this, "There was an error signing you in, Please Try Again", Toast.LENGTH_SHORT).show();
         }
     }
 

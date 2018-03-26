@@ -2,6 +2,7 @@ package com.example.android.team49;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,6 +40,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private Intent login;
     private MobileServiceClient msc;
     private List<PinAccess> results;
+    private ProgressDialog progressDialog;
     private MobileServiceTable<PinAccess> pinTable;
     private MobileServiceTable<Ingredients> ingredientsTest;
 
@@ -101,9 +103,16 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
             pinTable = msc.getTable(PinAccess.class);
-
+            progressDialog = new ProgressDialog(this);
 
             @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog.setMessage("Registering your account... Please wait.");
+                    progressDialog.show();
+                }
+
                 @Override
                 protected Void doInBackground(Void... params) {
 
@@ -149,10 +158,18 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
                     return null;
                 }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                }
             };
             runAsyncTask(task);
         } catch (Exception e) {
-
+            Toast.makeText(this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
         }
 
         /*if(password.equals(confirm)) {
