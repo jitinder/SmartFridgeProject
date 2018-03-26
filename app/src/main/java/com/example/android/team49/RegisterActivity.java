@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.iid.InstanceID;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -43,6 +44,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private MobileServiceTable<PinAccess> pinTable;
     private MobileServiceTable<Ingredients> ingredientsTest;
+    private String instanceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +58,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         btRegister.setOnClickListener(RegisterActivity.this);
         tvRegistered = findViewById(R.id.tvRegistered);
         tvRegistered.setOnClickListener(RegisterActivity.this);
-
-        //AzureServiceAdapter.Initialize(RegisterActivity.this);
-
-        /*try {
-            mClient = new MobileServiceClient(
-                    "https://smartfridgeteam49.azurewebsites.net",
-                    this);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        detailsTable = mClient.getTable(Details.class);*/
+        instanceId = InstanceID.getInstance(this).getId();
 
     }
 
@@ -81,8 +72,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 if( name.equals("") || pin.equals("") || confirm.equals("")){
                     Toast.makeText(RegisterActivity.this, "Ensure all fields are filled in", Toast.LENGTH_LONG).show();
                     registerError();
-                }
-                else{
+                } else {
                     register(name, Integer.parseInt(pin), Integer.parseInt(confirm));
                 }
                 break;
@@ -96,7 +86,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     }
 
     public void register(final String name, final Integer pin, final Integer confirm) {
-        final PinAccess p = new PinAccess(name, pin);
+        final PinAccess p = new PinAccess(name, pin, instanceId);
         final Ingredients bread = new Ingredients("bread", "22/10/15", 5);
 
 
@@ -117,8 +107,8 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 protected Void doInBackground(Void... params) {
 
                     try{
-                        results = pinTable.where().field("pin").
-                                eq(pin).execute().get();
+                        results = pinTable.where().field("instanceId").
+                                eq(instanceId).execute().get();
 
                         //Offline Sync
                         //final List<ToDoItem> results = refreshItemsFromMobileServiceTableSyncTable();
@@ -146,13 +136,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
                                 }
                                 else{
-                                    Toast.makeText(RegisterActivity.this, "Pin Taken!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterActivity.this, "This device is already locked with a pin. If you have forgotten it...", Toast.LENGTH_LONG).show();
                                     registerError();
                                 }
                             }
                         });
                     } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
+                        Toast.makeText(RegisterActivity.this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
@@ -170,6 +160,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
             runAsyncTask(task);
         } catch (Exception e) {
             Toast.makeText(this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
 
         /*if(password.equals(confirm)) {

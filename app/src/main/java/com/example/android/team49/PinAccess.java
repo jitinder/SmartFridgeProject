@@ -38,6 +38,15 @@ public class PinAccess {
         mPin = pin;
     }
 
+    @com.google.gson.annotations.SerializedName("instanceId")
+    private String mInstanceId;
+    public String getInstanceId(){
+        return mInstanceId;
+    }
+    public void setInstanceId(String instanceId){
+        mInstanceId = instanceId;
+    }
+
     @com.google.gson.annotations.SerializedName("createdat")
     private DateTimeOffset mCreatedAt;
     public DateTimeOffset getCreatedAt(){
@@ -50,9 +59,10 @@ public class PinAccess {
     public DateTimeOffset getUpdatedAt() { return mUpdatedAt; }
     protected void setUpdatedAt(DateTimeOffset updatedAt) { mUpdatedAt = updatedAt; }
 
-    public PinAccess(String name, Integer pin){
+    public PinAccess(String name, Integer pin, String instanceId){
         this.setName(name);
         this.setPin(pin);
+        this.setInstanceId(instanceId);
     }
 
 }

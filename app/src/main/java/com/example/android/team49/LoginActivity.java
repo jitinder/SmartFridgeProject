@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
@@ -27,13 +28,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     private static final String TAG = "LOGIN_ACTIVITY";
     private Button registerButton;
     private Button loginButton;
-    private EditText etUsername;
     private EditText etPassword;
     private MobileServiceClient msc;
     private List<PinAccess> results;
     private MobileServiceTable<PinAccess> pinTable;
     private SharedPreferences login_state;
     private ProgressDialog progressDialog;
+    private String instanceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +43,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         // Build a GoogleSignInClient with the options specified by gso.
         registerButton = findViewById(R.id.button_register);
         loginButton = findViewById(R.id.button_login);
-        etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
+        instanceId = InstanceID.getInstance(this).getId();
 
         registerButton.setOnClickListener(LoginActivity.this);
         loginButton.setOnClickListener(LoginActivity.this);
 
-
         login_state = getSharedPreferences("login",MODE_PRIVATE);
-        //if(login_state.getBoolean("logged",false)){
-            //home();
-        //}
     }
 
     @Override
@@ -63,18 +60,17 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.button_login:
                 String pin = etPassword.getText().toString();
-                String username = etUsername.getText().toString();
-                if(pin.equals("") || username.equals("")){
+                if(pin.equals("")){
                     signInError();
                 } else {
                     int finalPin = Integer.parseInt(pin);
-                    login(finalPin, username);//pin input;
+                    login(finalPin, instanceId);//pin input;
                 }
                 break;
         }
     }
 
-    private void login(final int pin, final String username) {
+    private void login(final int pin, final String instanceId) {
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
@@ -92,17 +88,14 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 protected Void doInBackground(Void... params) {
 
                     try{
-                        results = pinTable.where().field("pin").
-                                eq(pin).execute().get();
-
-                        //Offline Sync
-                        //final List<ToDoItem> results = refreshItemsFromMobileServiceTableSyncTable();
+                        results = pinTable.where().field("instanceId").
+                                eq(instanceId).execute().get();
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //mAdapter.clear();
-                                if(results.size() != 0 && results.get(0).getName().equalsIgnoreCase(username)){
+                                if(results.size() != 0 && results.get(0).getPin().equals(pin)){
                                     home();
                                     login_state.edit().putBoolean("logged",true).apply();
                                 }
@@ -112,7 +105,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                             }
                         });
                     } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
+                        Toast.makeText(LoginActivity.this, "There was an error Signing you in, Please make sure you have registered.", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                     return null;
@@ -136,7 +129,6 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         Toast.makeText(LoginActivity.this, "Pin incorrect!", Toast.LENGTH_LONG).show();
         //refresh();
         //finish();
-        etUsername.setText("");
         etPassword.setText("");
         LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root_layout);
         rootLayout.clearFocus();
