@@ -4,6 +4,7 @@ package com.example.android.team49;
  * Created by venet on 12/03/2018.
  */
 
+import com.google.gson.annotations.SerializedName;
 import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
 
@@ -42,8 +43,16 @@ public class Ingredients {
     public Integer getQuantity(){
         return mQuantity;
     }
-    public void setQuantity(Integer quantity){
-        mQuantity = quantity;
+    public void setQuantity(Integer quantity)
+    {mQuantity = quantity;}
+
+    @com.google.gson.annotations.SerializedName("instanceId")
+    private String mInstanceId;
+    public String getInstanceId(){
+        return mInstanceId;
+    }
+    public void setInstanceId(String instanceId){
+        mInstanceId = instanceId;
     }
 
     @com.google.gson.annotations.SerializedName("createdat")
@@ -58,10 +67,11 @@ public class Ingredients {
     public DateTimeOffset getUpdatedAt() { return mUpdatedAt; }
     protected void setUpdatedAt(DateTimeOffset updatedAt) { mUpdatedAt = updatedAt; }
 
-    public Ingredients(String name, String expr, int quantity){
+    public Ingredients(String name, String expr, Integer quantity, String instanceId){
         this.setName(name);
         this.setExpr(expr);
         this.setQuantity(quantity);
+        this.setInstanceId(instanceId);
     }
 
 }

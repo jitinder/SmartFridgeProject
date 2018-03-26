@@ -11,10 +11,11 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 
 import java.util.List;
 
-public class ViewActivity extends AppCompatActivity {
+public class OrderActivity extends AppCompatActivity {
 
     private ListView lv;
     private ArrayAdapter<Ingredients> iAdapter;
@@ -29,13 +30,9 @@ public class ViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view);
         getIngredients(instanceId);
 
-        iAdapter = new ViewAdapter(this, R.layout.row_list_view);
+        iAdapter = new OrderAdapter(this, R.layout.row_list_order);
         lv = (ListView) findViewById(R.id.lvIngredients);
         lv.setAdapter(iAdapter);
-
-
-
-
     }
 
     public void setId(String instanceId){
@@ -53,8 +50,8 @@ public class ViewActivity extends AppCompatActivity {
 
                     try{
                         results = ingredientsTable.where().field("instanceId").eq(instanceId)
-                                .select("name").
-                                execute().get();
+                                .select("name").orderBy("quantity", QueryOrder.Ascending).
+                                        execute().get();
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -63,10 +60,10 @@ public class ViewActivity extends AppCompatActivity {
                                     iAdapter.addAll(results);
                                 }
                                 else{
-                                    Toast.makeText(ViewActivity.this, "add some ingredients!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(OrderActivity.this, "add some ingredients!", Toast.LENGTH_LONG).show();
                                 }
                             }
-                            });
+                        });
                     } catch (final Exception e) {
                         //createAndShowDialogFromTask(e, "Error");
                         e.printStackTrace();

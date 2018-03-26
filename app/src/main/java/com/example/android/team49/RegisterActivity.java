@@ -87,8 +87,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     public void register(final String name, final Integer pin, final Integer confirm) {
         final PinAccess p = new PinAccess(name, pin, instanceId);
-        final Ingredients bread = new Ingredients("bread", "22/10/15", 5);
-
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
@@ -136,7 +134,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
                                 }
                                 else{
-                                    Toast.makeText(RegisterActivity.this, "This device is already locked with a pin. If you have forgotten it...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterActivity.this, "Pin taken! Please choose another.", Toast.LENGTH_LONG).show();
                                     registerError();
                                 }
                             }

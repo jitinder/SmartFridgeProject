@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -17,30 +18,49 @@
         android:paddingTop="5dp"
         android:textSize="32sp" />
 
+    <ImageButton
+        android:id="@+id/ibMinus"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:layout_toStartOf="@+id/tvQuantity"
+        android:adjustViewBounds="true"
+        android:background="#00ffffff"
+        android:contentDescription="@string/register"
+        android:cropToPadding="false"
+        android:scaleType="centerInside"
+        android:src="@drawable/cast_expanded_controller_seekbar_track" />
+
+
     <TextView
         android:id="@+id/tvQuantity"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="30dp"
-        android:layout_toStartOf="@+id/ibOrder"
+        android:layout_marginStart="23dp"
+        android:layout_toStartOf="@id/ibAdd"
+        android:layout_marginEnd="23dp"
         android:gravity="center_vertical"
         android:padding="2dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 
     <ImageButton
-        android:id="@+id/ibOrder"
+        android:id="@+id/ibAdd"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvIngredient"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="bottom"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="14dp"
         android:adjustViewBounds="true"
         android:background="#00ffffff"
         android:contentDescription="@string/register"
         android:cropToPadding="false"
         android:scaleType="centerInside"
-        android:src="@drawable/basket_icon" />
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@color/white"/>
+
+
 </RelativeLayout>

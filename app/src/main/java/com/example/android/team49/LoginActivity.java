@@ -22,7 +22,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import java.util.List;
 
 
-public class LoginActivity extends Activity implements View.OnClickListener{
+public class LoginActivity extends Activity implements View.OnClickListener {
 
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "LOGIN_ACTIVITY";
@@ -49,7 +49,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         registerButton.setOnClickListener(LoginActivity.this);
         loginButton.setOnClickListener(LoginActivity.this);
 
-        login_state = getSharedPreferences("login",MODE_PRIVATE);
+        login_state = getSharedPreferences("login", MODE_PRIVATE);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.button_login:
                 String pin = etPassword.getText().toString();
-                if(pin.equals("")){
+                if (pin.equals("")) {
                     signInError();
                 } else {
                     int finalPin = Integer.parseInt(pin);
@@ -87,7 +87,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 @Override
                 protected Void doInBackground(Void... params) {
 
-                    try{
+                    try {
+                        System.out.println(instanceId);
                         results = pinTable.where().field("instanceId").
                                 eq(instanceId).execute().get();
 
@@ -95,11 +96,10 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                             @Override
                             public void run() {
                                 //mAdapter.clear();
-                                if(results.size() != 0 && results.get(0).getPin().equals(pin)){
+                                if (results.size() != 0 && results.get(0).getPin().equals(pin)) {
                                     home();
-                                    login_state.edit().putBoolean("logged",true).apply();
-                                }
-                                else{
+                                    login_state.edit().putBoolean("logged", true).apply();
+                                } else {
                                     signInError();
                                 }
                             }
@@ -142,12 +142,12 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-           // Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-           // handleSignInResult(task);
+            // Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            // handleSignInResult(task);
         }
     }
 
-    private void register(){
+    private void register() {
         Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(register);
     }
@@ -160,13 +160,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private void refresh(){
+    private void refresh() {
         Intent refresh = new Intent(LoginActivity.this, LoginActivity.class);
         startActivity(refresh);
         finish();
     }
 
-    private void home(){
+    private void home() {
         Intent logged = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(logged);
         finish();

@@ -12,6 +12,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="ingredient">Ingredient</string>
+    <string name="add">add</string>
+    <string name="minus">minus</string>
+    <string name="order">order</string>
 
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>

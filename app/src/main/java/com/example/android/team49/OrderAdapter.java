@@ -8,29 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.view.View;
-import android.view.View.OnClickListener;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 /**
- * Created by venet on 23/03/2018.
+ * Created by venet on 26/03/2018.
  */
 
-public class IngredientsAdapter extends ArrayAdapter<Ingredients> {
+public class OrderAdapter extends ArrayAdapter<Ingredients> {
 
     private Context context;
     private int resource;
     private LayoutInflater inflater;
+    private Integer q;
+    private String quantity_str;
 
     private static class ListViewHolder {
         private TextView name;
@@ -42,7 +34,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredients> {
         }
     }
 
-    public IngredientsAdapter(Context context, int layoutResourceId) {
+    public OrderAdapter(Context context, int layoutResourceId) {
         super(context, layoutResourceId);
         this.context = context;
         resource = layoutResourceId;
@@ -50,20 +42,22 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredients> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        inflater = ((Activity) context).getLayoutInflater();
         ListViewHolder holder = new ListViewHolder();
         convertView = (RelativeLayout) inflater.inflate(resource, null);
         final Ingredients ingredient = getItem(position);
+        q = ingredient.getQuantity();
+        quantity_str = Integer.toString(q);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(String.format(Locale.getDefault(), "%d", ingredient.getQuantity()));
+        holder.quantity.setText(quantity_str);
         //TODO: FIX INTEGER CONVERSION
 
         holder.order = convertView.findViewById(R.id.ibOrder);
-        holder.order.setOnClickListener(new OnClickListener() {
+        holder.order.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
