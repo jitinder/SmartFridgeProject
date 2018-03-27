@@ -43,10 +43,11 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item_action:
-                        ChooseMethodFragment chooseMethodFragment = new ChooseMethodFragment();
+                        //ChooseMethodFragment chooseMethodFragment = new ChooseMethodFragment();
+                        DataEntryFragment dataEntryFragment = new DataEntryFragment();
 
                         FragmentTransaction itemTransaction = getSupportFragmentManager().beginTransaction();
-                        itemTransaction.add(R.id.frame_layout, chooseMethodFragment);
+                        itemTransaction.add(R.id.frame_layout, dataEntryFragment);
                         itemTransaction.commit();
                         break;
 

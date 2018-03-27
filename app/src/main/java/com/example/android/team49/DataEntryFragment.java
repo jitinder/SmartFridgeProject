@@ -1,14 +1,21 @@
 package com.example.android.team49;
 
+
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -23,19 +30,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class DataEntryActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class DataEntryFragment extends Fragment {
 
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "DataEntryActivity";
+    private String barcodeValue = "";
 
+    private ProgressDialog progressDialog;
+    private EditText itemName;
     private ImageView itemImage;
-    EditText itemName;
+
+    public DataEntryFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_entry);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
         if (SDK_INT > 8)
@@ -45,14 +63,26 @@ public class DataEntryActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        itemImage = (ImageView) findViewById(R.id.item_image);
-        itemName = (EditText) findViewById(R.id.item_name);
+        itemName = (EditText) view.findViewById(R.id.item_name);
+        itemImage = (ImageView) view.findViewById(R.id.item_image);
 
-        Intent intent = new Intent(this, ScanActivity.class);
-        startActivityForResult(intent, RC_BARCODE_CAPTURE);
+
+        Button barcodeInput = (Button) view.findViewById(R.id.button_barcode_input);
+        barcodeInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), ScanActivity.class);
+                startActivityForResult(i, RC_BARCODE_CAPTURE);
+            }
+        });
+
+        return view;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+    /**Asynchronous Task to Handle API Call **/
+
+    class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {
@@ -77,15 +107,17 @@ public class DataEntryActivity extends AppCompatActivity {
         }
     }
 
+    class setDataFromAPI extends AsyncTask<Void, Void, Void> {
 
-    class parseData extends AsyncTask<String,Void,Void> {
-
+        @Override
         protected void onPreExecute() {
-            //display progress dialog.
-
+            super.onPreExecute();
+            progressDialog.setMessage("Fetching Item Data... Please wait");
+            progressDialog.show();
         }
 
-        protected Void doInBackground(String... barcodeValue) {
+        @Override
+        protected Void doInBackground(Void... voids) {
             try {
                 URL url = new URL("https://world.openfoodfacts.org/api/v0/product/" +barcodeValue+ ".json");
                 HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -95,14 +127,17 @@ public class DataEntryActivity extends AppCompatActivity {
                 JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
                 JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
                 JsonObject product = rootobj.getAsJsonObject("product");
-                //String productName = product.get("product_name").toString();//just grab the name
-                //itemName.setText(productName);
+                String productName = product.get("product_name").toString().replace("\"", "");//just grab the name
+                itemName.setText(productName);
 
-                //String productImageLink = product.get("image_front_small_url").toString();
-                //Log.d(TAG, "Name read: " + productName + " image URL : " +productImageLink);
-                Log.d(TAG, "doInBackground: " +rootobj.getAsString());
-                //new DownloadImageTask((ImageView) findViewById(R.id.item_image))
-                  //      .execute(productImageLink);
+                if(product.get("image_front_small_url") != null) {
+                    String productImageLink = product.get("image_front_small_url").toString().replace("\"", "");
+                    Log.d(TAG, "Name read: " + productName + " image URL : " + productImageLink);
+                    new DownloadImageTask((ImageView) getView().findViewById(R.id.item_image))
+                            .execute(productImageLink);
+                } else {
+                    itemImage.setImageResource(R.drawable.ic_broken_image_black_24dp);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,7 +145,12 @@ public class DataEntryActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onPostExecute(Bitmap result) {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
         }
     }
 
@@ -137,14 +177,15 @@ public class DataEntryActivity extends AppCompatActivity {
      * @see #setResult(int)
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_BARCODE_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(ScanActivity.BarcodeObject);
-                    itemName.setText(barcode.displayValue);
-                    Log.d(TAG, "Barcode read: " + barcode.displayValue);
-                    new parseData().doInBackground(barcode.displayValue);
+                    barcodeValue = barcode.displayValue;
+                    Log.d(TAG, "Barcode read: " + barcodeValue);
+                    progressDialog = new ProgressDialog(getContext());
+                    new setDataFromAPI().doInBackground();
                 } else {
                     Log.d(TAG, "No barcode captured, intent data is null");
                 }
@@ -154,4 +195,5 @@ public class DataEntryActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 }
