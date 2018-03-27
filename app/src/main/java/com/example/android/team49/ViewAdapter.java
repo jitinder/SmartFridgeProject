@@ -72,11 +72,13 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
+        final String name = ingredient.getName();
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
 
         q = (Integer) ingredient.getQuantity();
+        //q =5;
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
@@ -88,7 +90,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             public void onClick(View v) {
                 q--;
                 holder.quantity.setText(Integer.toString(q));
-                updateItem(ingredient, q);
+                update(name, q);
             }
         });
 
@@ -102,22 +104,51 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             public void onClick(View v) {
                 q++;
                 holder.quantity.setText(Integer.toString(q));
-                updateItem(ingredient, q);
+                update(name, q);
             }
         });
 
         return convertView;
     }
 
-    private void updateItem(final Ingredients ingredient, final Integer quantity) {
+    private void update(final String name, final Integer quantity){
         try {
-            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", context);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
+            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try{
+                        //System.out.println(name);
+                        final List<Ingredients> results = ingredientsTable.where().field("name").eq(name).
+                                        execute().get();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //System.out.println(results.get(0).getName());
+                                results.get(0).setQuantity(quantity);
+                                ingredientsTable.update(results.get(0));
+                            }
+                        });
+                    } catch (final Exception e) {
+                        //createAndShowDialogFromTask(e, "Error");
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            };
+            runAsyncTask(task);
+        } catch (Exception e) {
+
         }
-        ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
-        ingredient.setQuantity(quantity);
-        ingredientsTable.update(ingredient);
+    }
+
+    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            return task.execute();
+        }
     }
 }
 

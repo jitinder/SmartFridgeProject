@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.google.android.gms.internal.zzagz.runOnUiThread;
+import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.val;
 
 
 /**
@@ -45,12 +46,11 @@ public class ViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view, container, false);
         id = InstanceID.getInstance(getContext()).getId();
-        System.out.println(id);
-        getIngredients(id);
 
         iAdapter = new ViewAdapter(getContext(), R.layout.row_list_view);
         lv = (ListView) view.findViewById(R.id.lvIngredients);
         lv.setAdapter(iAdapter);
+        getIngredients(id);
 
         // Inflate the layout for this fragment
         return view;

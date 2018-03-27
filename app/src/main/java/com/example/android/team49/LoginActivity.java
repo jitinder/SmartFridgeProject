@@ -88,7 +88,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 protected Void doInBackground(Void... params) {
 
                     try {
-                        System.out.println(instanceId);
+                        //System.out.println(instanceId);
                         results = pinTable.where().field("instanceId").
                                 eq(instanceId).execute().get();
 

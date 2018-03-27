@@ -88,6 +88,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     public void register(final String name, final Integer pin, final Integer confirm) {
         final PinAccess p = new PinAccess(name, pin, instanceId);
 
+
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", this);
             pinTable = msc.getTable(PinAccess.class);
