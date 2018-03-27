@@ -44,6 +44,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public final class ScanActivity extends AppCompatActivity implements BarcodeGraphicTracker.BarcodeUpdateListener{
 
@@ -65,6 +66,7 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
     private int newCameraSide = 0;
     private ImageView flashImageView;
     private ImageView cameraSideImageView;
+    private ImageView clickBarcode;
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
@@ -109,6 +111,15 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
                     newCameraSide = CameraSource.CAMERA_FACING_BACK;
                 }
                 toggleCamera(newCameraSide);
+            }
+        });
+
+        //Handling Barcode Clicking
+        clickBarcode = (ImageView) findViewById(R.id.click_barcode);
+        clickBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanBarcode();
             }
         });
 
@@ -427,6 +438,26 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
         }
     }
 
+    private void scanBarcode(){
+        ArrayList<Barcode> barcodes = new ArrayList<>();
+        for (BarcodeGraphic graphic : mGraphicOverlay.getGraphics()) {
+            Barcode barcode = graphic.getBarcode();
+            barcodes.add(barcode);
+        }
+        if(barcodes.size() > 1){
+            //Add option to choose which ones to add.
+            Log.d(TAG, "scanBarcode: More than one Barcode Found");
+        } else {
+            if (barcodes.size() != 0) {
+                Intent data = new Intent();
+                data.putExtra(BarcodeObject, barcodes.get(0));
+                setResult(CommonStatusCodes.SUCCESS, data);
+                finish();
+            }
+        }
+
+    }
+
     /**
      * onTap returns the tapped barcode result to the calling Activity.
      *
@@ -473,7 +504,7 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            return onTap(e.getRawX(), e.getRawY()) || super.onSingleTapConfirmed(e);
+            return true;//onTap(e.getRawX(), e.getRawY()) || super.onSingleTapConfirmed(e);
         }
     }
 

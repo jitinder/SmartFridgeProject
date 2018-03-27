@@ -25,25 +25,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginActivity"
+        <activity android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+               <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity android:name=".ScanActivity" />
-        <activity
-            android:name=".HomeActivity"
-            android:label="Smart Fridge Home"></activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".ViewActivity" />
-        <activity
-            android:name=".DataEntryActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".OrderActivity"></activity>
+        <activity android:name=".HomeActivity"
+            android:label="Smart Fridge Home">
+        </activity>
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".DataEntryActivity"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
     </application>
 
 </manifest>
