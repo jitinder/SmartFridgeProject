@@ -83,7 +83,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> implements View.OnCli
 
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(quantity_str);
+        holder.quantity.setText(Integer.toString(ingredient.getQuantity()));
 
         holder.add = convertView.findViewById(R.id.ibAdd);
         holder.add.setOnClickListener(this);

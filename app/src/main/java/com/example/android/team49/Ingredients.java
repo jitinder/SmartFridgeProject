@@ -10,7 +10,6 @@ import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
 public class Ingredients {
 
-
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
     public String getId(){
@@ -40,9 +39,7 @@ public class Ingredients {
 
     @com.google.gson.annotations.SerializedName("quantity")
     private Integer mQuantity;
-    public Integer getQuantity(){
-        return mQuantity;
-    }
+    public Integer getQuantity() { return mQuantity; }
     public void setQuantity(Integer quantity)
     {mQuantity = quantity;}
 
