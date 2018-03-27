@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
@@ -30,6 +32,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 /**
  * Created by venet on 23/03/2018.
@@ -40,8 +45,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     private Context context;
     private int resource;
     private LayoutInflater inflater;
-    private Ingredients ingredient;
-    private int q;
+    private Integer q;
     private String quantity_str;
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
@@ -66,14 +70,13 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        inflater = ((Activity) context).getLayoutInflater();
+        final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
-        convertView = (RelativeLayout) inflater.inflate(resource, null);
 
-        ingredient = getItem(position);
-        q = ingredient.getQuantity();
-        quantity_str = Integer.toString(q);
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        convertView = inflater.inflate(resource, parent, false);
 
+        q = (Integer) ingredient.getQuantity();
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
@@ -84,9 +87,8 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             @Override
             public void onClick(View v) {
                 q--;
-                holder.quantity.setText(quantity_str);
-                ingredient.setQuantity(q);
-                update();
+                holder.quantity.setText(Integer.toString(q));
+                updateItem(ingredient, q);
             }
         });
 
@@ -99,24 +101,23 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             @Override
             public void onClick(View v) {
                 q++;
-                holder.quantity.setText(quantity_str);
-                ingredient.setQuantity(q);
-                update();
+                holder.quantity.setText(Integer.toString(q));
+                updateItem(ingredient, q);
             }
         });
 
         return convertView;
     }
 
-
-    private void update(){
+    private void updateItem(final Ingredients ingredient, final Integer quantity) {
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", context);
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
-            ingredientsTable.update(ingredient);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+        ingredient.setQuantity(quantity);
+        ingredientsTable.update(ingredient);
     }
 }
 

@@ -23,6 +23,7 @@ public class OrderAdapter extends ArrayAdapter<Ingredients> {
     private LayoutInflater inflater;
     private Integer q;
     private String quantity_str;
+    private Ingredients ingredient;
 
     private static class ListViewHolder {
         private TextView name;
@@ -45,8 +46,8 @@ public class OrderAdapter extends ArrayAdapter<Ingredients> {
         inflater = ((Activity) context).getLayoutInflater();
         ListViewHolder holder = new ListViewHolder();
         convertView = (RelativeLayout) inflater.inflate(resource, null);
-        final Ingredients ingredient = getItem(position);
-        q = ingredient.getQuantity();
+        ingredient = getItem(position);
+        q = (Integer) ingredient.getQuantity();
         quantity_str = Integer.toString(q);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
@@ -54,7 +55,7 @@ public class OrderAdapter extends ArrayAdapter<Ingredients> {
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
         holder.quantity.setText(quantity_str);
-        //TODO: FIX INTEGER CONVERSION
+        //TODO: FIX GET QUANTITY, NULL?
 
         holder.order = convertView.findViewById(R.id.ibOrder);
         holder.order.setOnClickListener(new View.OnClickListener() {
