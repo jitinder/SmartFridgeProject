@@ -35,7 +35,7 @@ import java.util.Locale;
  * Created by venet on 23/03/2018.
  */
 
-public class ViewAdapter extends ArrayAdapter<Ingredients> implements View.OnClickListener {
+public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
     private Context context;
     private int resource;
@@ -67,7 +67,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> implements View.OnCli
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         inflater = ((Activity) context).getLayoutInflater();
-        ListViewHolder holder = new ListViewHolder();
+        final ListViewHolder holder = new ListViewHolder();
         convertView = (RelativeLayout) inflater.inflate(resource, null);
 
         ingredient = getItem(position);
@@ -79,36 +79,35 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> implements View.OnCli
         holder.name.setText(ingredient.getName());
 
         holder.minus = convertView.findViewById(R.id.ibMinus);
-        holder.minus.setOnClickListener(this);
+        holder.minus.setOnClickListener(new View.OnClickListener() {
 
-
-        holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(Integer.toString(ingredient.getQuantity()));
-
-        holder.add = convertView.findViewById(R.id.ibAdd);
-        holder.add.setOnClickListener(this);
-
-        return convertView;
-    }
-
-    @Override
-    public void onClick(View v) {
-        ListViewHolder holder = new ListViewHolder();
-        switch(v.getId()){
-            case R.id.ibMinus:
+            @Override
+            public void onClick(View v) {
                 q--;
                 holder.quantity.setText(quantity_str);
                 ingredient.setQuantity(q);
                 update();
-                break;
-            case R.id.ibAdd:
+            }
+        });
+
+        holder.quantity = convertView.findViewById(R.id.tvQuantity);
+        holder.quantity.setText(Integer.toString(q));
+
+        holder.add = convertView.findViewById(R.id.ibAdd);
+        holder.add.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
                 q++;
                 holder.quantity.setText(quantity_str);
                 ingredient.setQuantity(q);
                 update();
-                break;
-        }
+            }
+        });
+
+        return convertView;
     }
+
 
     private void update(){
         try {

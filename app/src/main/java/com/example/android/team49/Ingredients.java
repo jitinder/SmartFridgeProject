@@ -4,7 +4,6 @@ package com.example.android.team49;
  * Created by venet on 12/03/2018.
  */
 
-import com.google.gson.annotations.SerializedName;
 import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
 

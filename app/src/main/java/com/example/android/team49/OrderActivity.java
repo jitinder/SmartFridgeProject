@@ -27,7 +27,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view);
+        setContentView(R.layout.activity_order);
         getIngredients(instanceId);
 
         iAdapter = new OrderAdapter(this, R.layout.row_list_order);
