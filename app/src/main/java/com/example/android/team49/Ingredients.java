@@ -44,7 +44,7 @@ public class Ingredients {
         this.expDate = expDate;
     }
 
-    @com.google.gson.annotations.SerializedName("QUANTITY")
+    @com.google.gson.annotations.SerializedName("quantity")
     private int quantity;
     public int getQuantity() {
         return quantity;
@@ -81,6 +81,11 @@ public class Ingredients {
     }
     public void setBarcodeNumber(int barcodeNumber) {
         this.barcodeNumber = barcodeNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " +name+ " Barcode: " +barcodeNumber+ " Exp: " +expDate+ " Quantity: " +quantity+ " to InstanceID: " +instanceID;
     }
 
 }

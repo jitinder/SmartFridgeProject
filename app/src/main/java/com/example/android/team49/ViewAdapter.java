@@ -45,7 +45,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     private Context context;
     private int resource;
     private LayoutInflater inflater;
-    private Integer q;
+    private int q;
     private String quantity_str;
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
@@ -77,8 +77,8 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
 
-        q = (Integer) ingredient.getQuantity();
-        System.out.println(Integer.toString(q)+" "+ingredient.getName());
+        q = (int) ingredient.getQuantity();
+        System.out.println(q+" "+ingredient.getName());
         //q =5;
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
@@ -90,13 +90,13 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             @Override
             public void onClick(View v) {
                 q--;
-                holder.quantity.setText(Integer.toString(q));
+                holder.quantity.setText("" + q);
                 update(name, q);
             }
         });
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(Integer.toString(q));
+        holder.quantity.setText("" + q);
 
         holder.add = convertView.findViewById(R.id.ibAdd);
         holder.add.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +104,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             @Override
             public void onClick(View v) {
                 q++;
-                holder.quantity.setText(Integer.toString(q));
+                holder.quantity.setText("" + q);
                 update(name, q);
             }
         });
