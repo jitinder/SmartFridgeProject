@@ -62,6 +62,7 @@ public class DataEntryFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
 
     private Button addItem;
+    private ProgressDialog progressDialog;
 
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
@@ -150,6 +151,15 @@ public class DataEntryFragment extends Fragment {
             ingredientsTable.insert(ingredient);
 
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog = new ProgressDialog(getContext());
+                    progressDialog.setMessage("Adding item to Stock... Please Wait");
+                    progressDialog.show();
+                }
+
                 @Override
                 protected Void doInBackground(Void... params) {
 
@@ -162,7 +172,7 @@ public class DataEntryFragment extends Fragment {
                             public void run() {
 
                                 if(results.size() != 0){
-                                    Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
                                 }
                                 else{
                                     Toast.makeText(getContext(), "error, try again", Toast.LENGTH_LONG).show();
@@ -176,6 +186,14 @@ public class DataEntryFragment extends Fragment {
                     }
 
                     return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
                 }
             };
             runAsyncTask(task);

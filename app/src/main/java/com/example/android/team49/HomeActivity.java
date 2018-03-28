@@ -42,10 +42,12 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                DataEntryFragment dataEntryFragment = new DataEntryFragment();
+
+                ViewFragment viewFragment = new ViewFragment();
                 switch (item.getItemId()) {
                     case R.id.item_action:
-                        //ChooseMethodFragment chooseMethodFragment = new ChooseMethodFragment();
-                        DataEntryFragment dataEntryFragment = new DataEntryFragment();
+                        frameLayout.removeAllViews();
 
                         FragmentTransaction itemTransaction = getSupportFragmentManager().beginTransaction();
                         itemTransaction.add(R.id.frame_layout, dataEntryFragment);
@@ -53,10 +55,11 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.reorder_action:
+                        frameLayout.removeAllViews();
                         break;
 
                     case R.id.stock_action:
-                        ViewFragment viewFragment = new ViewFragment();
+                        frameLayout.removeAllViews();
 
                         FragmentTransaction stockTransaction = getSupportFragmentManager().beginTransaction();
                         stockTransaction.add(R.id.frame_layout, viewFragment);
@@ -64,9 +67,11 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.recipes_action:
+                        frameLayout.removeAllViews();
                         break;
 
                     case R.id.account_action:
+                        frameLayout.removeAllViews();
                         break;
                 }
                 return true;

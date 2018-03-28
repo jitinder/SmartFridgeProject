@@ -73,6 +73,8 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
 
+    ArrayList<Barcode> barcodes = new ArrayList<>();
+
     // helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
@@ -449,12 +451,28 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
     }
 
     private void scanBarcode(){
-        ArrayList<Barcode> barcodes = new ArrayList<>();
         for (BarcodeGraphic graphic : mGraphicOverlay.getGraphics()) {
             Barcode barcode = graphic.getBarcode();
             barcodes.add(barcode);
         }
         if(barcodes.size() > 1){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String[] barcodeString = new String[barcodes.size()];
+            for(int i = 0; i < barcodes.size(); i++){
+                barcodeString[i] = barcodes.get(i).displayValue;
+            }
+            builder.setTitle("Pick one Barcode")
+                    .setItems(barcodeString, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent data = new Intent();
+                            data.putExtra(BarcodeObject, barcodes.get(which));
+                            setResult(CommonStatusCodes.SUCCESS, data);
+                            finish();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
             //Add option to choose which ones to add.
             Log.d(TAG, "scanBarcode: More than one Barcode Found");
         } else {
