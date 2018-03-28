@@ -10,14 +10,17 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="0dp"
         android:layout_above="@id/non_scrollable">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="30dp"
+            android:paddingBottom="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:orientation="vertical"
@@ -37,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="30dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp">
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -54,6 +57,8 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textAlignment="center"
+                    android:hint="@string/optional"
                     android:inputType="number"/>
 
             </LinearLayout>
@@ -63,8 +68,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp">
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,6 +85,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textAlignment="center"
                     android:inputType="textVisiblePassword"/>
 
             </LinearLayout>
@@ -89,8 +95,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp">
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,6 +114,34 @@
                     android:background="@drawable/shape"
                     android:textColor="@color/colorPrimaryDark"
                     android:text="@string/pick_a_date"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/black"
+                    android:text="@string/quantity"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="10dp"/>
+
+                <NumberPicker
+                    android:id="@+id/item_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:requiresFadingEdge="horizontal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:background="@drawable/shape"
+                    android:layout_weight="1"/>
 
             </LinearLayout>
 

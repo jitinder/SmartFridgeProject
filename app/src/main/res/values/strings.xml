@@ -43,5 +43,7 @@
     <string name="add_item">Add Item</string>
     <string name="click_to_capture_one"><![CDATA[Click to Capture ->]]></string>
     <string name="click_to_capture_two"><![CDATA[<- Click to Capture]]></string>
+    <string name="optional">(Optional)</string>
+    <string name="quantity">Quantity</string>
 
 </resources>

@@ -22,9 +22,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.iid.InstanceID;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,9 +51,12 @@ public class DataEntryFragment extends Fragment {
     private EditText itemBarcode;
     private EditText itemName;
     private ImageView itemImage;
+    private NumberPicker numberPicker;
 
     private Button datePick;
     private DatePickerDialog datePickerDialog;
+
+    private Button addItem;
 
     public DataEntryFragment() {
         // Required empty public constructor
@@ -75,7 +80,13 @@ public class DataEntryFragment extends Fragment {
         itemBarcode = (EditText) view.findViewById(R.id.item_barcode);
         itemName = (EditText) view.findViewById(R.id.item_name);
         itemImage = (ImageView) view.findViewById(R.id.item_image);
+        numberPicker = (NumberPicker) view.findViewById(R.id.item_quantity);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(10);
 
+        addItem = (Button) view.findViewById(R.id.confirm_add_item);
+
+        //Picking Date
         datePick = (Button) view.findViewById(R.id.item_exp);
         datePick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +95,7 @@ public class DataEntryFragment extends Fragment {
             }
         });
 
+        //Handling Barcode Scanning
         Button barcodeInput = (Button) view.findViewById(R.id.button_barcode_input);
         barcodeInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +105,37 @@ public class DataEntryFragment extends Fragment {
             }
         });
 
+        //Handling Item Adding to DB
+        addItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int barcodeNumber;
+                try {
+                    barcodeNumber = Integer.parseInt(itemBarcode.getText().toString());
+                } catch (NumberFormatException n){
+                    barcodeNumber = 0;
+                }
+                String name = itemName.getText().toString();
+                String date = datePick.getText().toString();
+                int quantity = numberPicker.getValue();
+                if(name.equals("") || date.equalsIgnoreCase(getString(R.string.pick_a_date)) || date.equals("")){
+                    Toast.makeText(getContext(), "Please Fill out all required information properly", Toast.LENGTH_SHORT).show();
+                } else {
+                    addItemToDB(barcodeNumber, name, date, quantity);
+                }
+            }
+        });
+
         return view;
+    }
+
+    private void addItemToDB(int barcodeNumber, String itemName, String expDate, int quantity) {
+        String instanceID = InstanceID.getInstance(getContext()).getId();
+        Ingredient ingredient = new Ingredient(instanceID, itemName, barcodeNumber, expDate, quantity);
+        Log.d(TAG, "addItemToDB: "+ingredient.toString());
+
+        // Add to DB Here @Venet
+
     }
 
     public Dialog getDatePicker() {
@@ -177,24 +219,12 @@ public class DataEntryFragment extends Fragment {
     /**
      * Called when an activity you launched exits, giving you the requestCode
      * you started it with, the resultCode it returned, and any additional
-     * data from it.  The <var>resultCode</var> will be
-     * {@link #RESULT_CANCELED} if the activity explicitly returned that,
+     * data from it.  The <var>resultCode</var> will be resultCancelled if the activity explicitly returned that,
      * didn't return any result, or crashed during its operation.
      * <p/>
      * <p>You will receive this call immediately before onResume() when your
      * activity is re-starting.
      * <p/>
-     *
-     * @param requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * @param resultCode  The integer result code returned by the child activity
-     *                    through its setResult().
-     * @param data        An Intent, which can return result data to the caller
-     *                    (various data can be attached to Intent "extras").
-     * @see #startActivityForResult
-     * @see #createPendingResult
-     * @see #setResult(int)
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

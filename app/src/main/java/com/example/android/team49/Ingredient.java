@@ -20,13 +20,6 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
-    public Ingredient(String instanceID, String name, String expDate, int quantity) {
-        this.instanceID = instanceID;
-        this.name = name;
-        this.expDate = expDate;
-        this.quantity = quantity;
-    }
-
     public String getInstanceID() {
         return instanceID;
     }
@@ -65,5 +58,10 @@ public class Ingredient {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " +name+ " Barcode: " +barcodeNumber+ " Exp: " +expDate+ " Quantity: " +quantity+ " to InstanceID: " +instanceID;
     }
 }
