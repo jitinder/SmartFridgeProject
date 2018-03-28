@@ -2,6 +2,9 @@ package com.example.android.team49;
 
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,8 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -29,6 +34,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 
 /**
@@ -40,9 +46,12 @@ public class DataEntryFragment extends Fragment {
     private static final String TAG = "DataEntryActivity";
     private String barcodeValue = "";
 
-    private ProgressDialog progressDialog;
+    private EditText itemBarcode;
     private EditText itemName;
     private ImageView itemImage;
+
+    private Button datePick;
+    private DatePickerDialog datePickerDialog;
 
     public DataEntryFragment() {
         // Required empty public constructor
@@ -63,9 +72,17 @@ public class DataEntryFragment extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
 
+        itemBarcode = (EditText) view.findViewById(R.id.item_barcode);
         itemName = (EditText) view.findViewById(R.id.item_name);
         itemImage = (ImageView) view.findViewById(R.id.item_image);
 
+        datePick = (Button) view.findViewById(R.id.item_exp);
+        datePick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDatePicker().show();
+            }
+        });
 
         Button barcodeInput = (Button) view.findViewById(R.id.button_barcode_input);
         barcodeInput.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +96,23 @@ public class DataEntryFragment extends Fragment {
         return view;
     }
 
+    public Dialog getDatePicker() {
+        // Use the current date as the default date in the picker
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Create a new instance of DatePickerDialog and return it
+        datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String date = dayOfMonth + " / " + month + " / " + year;
+                datePick.setText(date);
+            }
+        }, year, month, day);
+        return datePickerDialog;
+    }
 
     /**Asynchronous Task to Handle API Call **/
 
@@ -110,13 +144,6 @@ public class DataEntryFragment extends Fragment {
     class setDataFromAPI extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog.setMessage("Fetching Item Data... Please wait");
-            progressDialog.show();
-        }
-
-        @Override
         protected Void doInBackground(Void... voids) {
             try {
                 URL url = new URL("https://world.openfoodfacts.org/api/v0/product/" +barcodeValue+ ".json");
@@ -128,6 +155,7 @@ public class DataEntryFragment extends Fragment {
                 JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
                 JsonObject product = rootobj.getAsJsonObject("product");
                 String productName = product.get("product_name").toString().replace("\"", "");//just grab the name
+                itemBarcode.setText(barcodeValue);
                 itemName.setText(productName);
 
                 if(product.get("image_front_small_url") != null) {
@@ -143,14 +171,6 @@ public class DataEntryFragment extends Fragment {
                 e.printStackTrace();
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
         }
     }
 
@@ -184,7 +204,6 @@ public class DataEntryFragment extends Fragment {
                     Barcode barcode = data.getParcelableExtra(ScanActivity.BarcodeObject);
                     barcodeValue = barcode.displayValue;
                     Log.d(TAG, "Barcode read: " + barcodeValue);
-                    progressDialog = new ProgressDialog(getContext());
                     new setDataFromAPI().doInBackground();
                 } else {
                     Log.d(TAG, "No barcode captured, intent data is null");

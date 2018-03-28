@@ -67,6 +67,7 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
     private ImageView flashImageView;
     private ImageView cameraSideImageView;
     private ImageView clickBarcode;
+    private Button manualInput;
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
@@ -120,6 +121,15 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
             @Override
             public void onClick(View v) {
                 scanBarcode();
+            }
+        });
+
+        //Manual Input Button
+        manualInput = (Button) findViewById(R.id.button_manual_input);
+        manualInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
