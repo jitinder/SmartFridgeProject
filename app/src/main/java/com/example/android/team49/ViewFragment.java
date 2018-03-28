@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,7 @@ public class ViewFragment extends Fragment {
                 protected Void doInBackground(Void... params) {
 
                     try{
-                        results = ingredientsTable.where().field("instanceId").eq(instanceId)
-                                .select("name").
+                        results = ingredientsTable.where().field("instanceId").eq(instanceId).
                                         execute().get();
 
                         runOnUiThread(new Runnable() {
@@ -76,6 +76,9 @@ public class ViewFragment extends Fragment {
 
                                 if(results.size() != 0){
                                     iAdapter.addAll(results);
+                                    for(int i = 0; i < iAdapter.getCount(); i++){
+                                        Log.d("ViewFragment", "run: " +iAdapter.getItem(i).toString());
+                                    }
                                 }
                                 else{
                                     Toast.makeText(getContext(), "add some ingredients!", Toast.LENGTH_LONG).show();

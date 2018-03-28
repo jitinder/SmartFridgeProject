@@ -9,14 +9,6 @@ import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
 public class Ingredients {
 
-    public Ingredients(String instanceID, String name, int barcodeNumber, String expDate, int quantity) {
-        this.instanceID = instanceID;
-        this.name = name;
-        this.barcodeNumber = barcodeNumber;
-        this.expDate = expDate;
-        this.quantity = quantity;
-    }
-
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
     public String getId(){
@@ -81,6 +73,15 @@ public class Ingredients {
     }
     public void setBarcodeNumber(int barcodeNumber) {
         this.barcodeNumber = barcodeNumber;
+    }
+
+
+    public Ingredients(String instanceID, String name, int barcodeNumber, String expDate, int quantity) {
+        this.instanceID = instanceID;
+        this.name = name;
+        this.barcodeNumber = barcodeNumber;
+        this.expDate = expDate;
+        this.quantity = quantity;
     }
 
     @Override
