@@ -2,8 +2,10 @@ package com.example.android.team49;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,7 +47,6 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     private Context context;
     private int resource;
     private LayoutInflater inflater;
-    private int q;
     private String quantity_str;
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
@@ -77,9 +78,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
 
-        q = (int) ingredient.getQuantity();
-        System.out.println(q+" "+ingredient.getName());
-        //q =5;
+        //quantity_str = Integer.toString(q);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
@@ -89,30 +88,28 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
             @Override
             public void onClick(View v) {
-                q--;
-                holder.quantity.setText("" + q);
-                update(name, q);
+                holder.quantity.setText(""+(ingredient.getQuantity()-1));
+                update(ingredient, ingredient.getQuantity()-1);
             }
         });
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText("" + q);
+        holder.quantity.setText(""+ingredient.getQuantity());
 
         holder.add = convertView.findViewById(R.id.ibAdd);
         holder.add.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                q++;
-                holder.quantity.setText("" + q);
-                update(name, q);
+                holder.quantity.setText(""+(ingredient.getQuantity()+1));
+                update(ingredient, ingredient.getQuantity()+1);
             }
         });
 
         return convertView;
     }
 
-    private void update(final String name, final Integer quantity){
+    private void update(final Ingredients ingredient, final int quantity){
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
             ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
@@ -121,14 +118,17 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                 protected Void doInBackground(Void... params) {
                     try{
                         //System.out.println(name);
-                        final List<Ingredients> results = ingredientsTable.where().field("name").eq(name).
+                        final List<Ingredients> results = ingredientsTable.where().field("name").eq(ingredient.getName()).
                                         execute().get();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //System.out.println(results.get(0).getName());
-                                results.get(0).setQuantity(quantity);
-                                ingredientsTable.update(results.get(0));
+                                //results.get(0).setQuantity(quantity);
+                                ingredient.setQuantity(quantity);
+                                ingredientsTable.update(ingredient);
+                                //ingredientsTable.update(results.get(0));
+
                                 //Ingredients ingredient = new Ingredients(InstanceID.getInstance(context).getId(),"juice",2323, "22/10/12", 123123 );
                                 //Ingredients ingredient2 = new Ingredients(InstanceID.getInstance(context).getId(),"cheese",79789, "23/11/12", 3 );
                                 //ingredientsTable.insert(ingredient);

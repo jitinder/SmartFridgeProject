@@ -1,6 +1,5 @@
 package com.example.android.team49;
 
-
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,41 +16,39 @@ import android.widget.Toast;
 import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.microsoft.windowsazure.mobileservices.table.query.QueryOrder;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.android.gms.internal.zzagz.runOnUiThread;
-import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperations.val;
-
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by venet on 28/03/2018.
  */
-public class ViewFragment extends Fragment {
+
+public class OrderFragment extends Fragment {
 
     private ListView lv;
     private ArrayAdapter<Ingredients> iAdapter;
     private MobileServiceClient msc;
     private List<Ingredients> results;
     private MobileServiceTable<Ingredients> ingredientsTable;
-    public String id;
+    private String instanceId;
 
-    public ViewFragment() {
+    public OrderFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_view, container, false);
-        id = InstanceID.getInstance(getContext()).getId();
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+        instanceId = InstanceID.getInstance(getContext()).getId();
+        getIngredients(instanceId);
 
-        iAdapter = new ViewAdapter(getContext(), R.layout.row_list_view);
+        iAdapter = new OrderAdapter(getContext(), R.layout.row_list_order);
         lv = (ListView) view.findViewById(R.id.lvIngredients);
         lv.setAdapter(iAdapter);
-        getIngredients(id);
 
         // Inflate the layout for this fragment
         return view;
@@ -59,31 +56,26 @@ public class ViewFragment extends Fragment {
 
     private void getIngredients(final String instanceId){
         try {
+
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
             ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
-
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-
                     try{
                         results = ingredientsTable.where().field("instanceId").eq(instanceId)
-                                .execute().get();
+                                .orderBy("quantity", QueryOrder.Ascending).
+                                        execute().get();
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
                                 if(results.size() != 0){
                                     iAdapter.addAll(results);
-                                    for(int i = 0; i < iAdapter.getCount(); i++){
-                                         Log.d("ViewFragment", "run: " +iAdapter.getItem(i).toString());
-                                    }
                                 }
                                 else{
                                     Toast.makeText(getContext(), "add some ingredients!", Toast.LENGTH_LONG).show();
                                 }
-
                             }
                         });
                     } catch (final Exception e) {
@@ -106,5 +98,4 @@ public class ViewFragment extends Fragment {
             return task.execute();
         }
     }
-
 }

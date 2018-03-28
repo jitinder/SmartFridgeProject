@@ -36,6 +36,7 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
@@ -57,6 +58,7 @@ public class DataEntryFragment extends Fragment {
     private EditText itemName;
     private ImageView itemImage;
     private NumberPicker numberPicker;
+    int barcodeNumber;
 
     private Button datePick;
     private DatePickerDialog datePickerDialog;
@@ -106,7 +108,7 @@ public class DataEntryFragment extends Fragment {
         });
 
         //Handling Barcode Scanning
-        Button barcodeInput = (Button) view.findViewById(R.id.button_barcode_input);
+        final Button barcodeInput = (Button) view.findViewById(R.id.button_barcode_input);
         barcodeInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,9 +121,10 @@ public class DataEntryFragment extends Fragment {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int barcodeNumber;
+                //TODO: try catch not entered, barcode number always assigned to be 0
                 try {
                     barcodeNumber = Integer.parseInt(itemBarcode.getText().toString());
+                    System.out.println("+"+barcodeNumber);
                 } catch (NumberFormatException n){
                     barcodeNumber = 0;
                 }
@@ -139,9 +142,9 @@ public class DataEntryFragment extends Fragment {
         return view;
     }
 
-    private void addItemToDB(final int barcodeNumber, final String itemName, String expDate, int quantity) {
+    private void addItemToDB(final int barcodeNumber, final String name, String expDate, int quantity) {
         String instanceID = InstanceID.getInstance(getContext()).getId();
-        Ingredients ingredient = new Ingredients(instanceID, itemName, barcodeNumber, expDate, quantity);
+        Ingredients ingredient = new Ingredients(instanceID, name, barcodeNumber, expDate, quantity);
         Log.d(TAG, "addItemToDB: "+ingredient.toString());
 
         // Add to DB Here @Venet
@@ -164,7 +167,7 @@ public class DataEntryFragment extends Fragment {
                 protected Void doInBackground(Void... params) {
 
                     try{
-                        results = ingredientsTable.where().field("name").eq(itemName)
+                        results = ingredientsTable.where().field("name").eq(name)
                                         .execute().get();
 
                         runOnUiThread(new Runnable() {
@@ -172,7 +175,9 @@ public class DataEntryFragment extends Fragment {
                             public void run() {
 
                                 if(results.size() != 0){
-                                    //Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
+                                    itemName.setText("");
+                                    itemBarcode.setText("");
                                 }
                                 else{
                                     Toast.makeText(getContext(), "error, try again", Toast.LENGTH_LONG).show();

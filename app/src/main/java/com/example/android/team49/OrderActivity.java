@@ -27,7 +27,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.fragment_order);
         getIngredients(instanceId);
 
         iAdapter = new OrderAdapter(this, R.layout.row_list_order);
@@ -50,7 +50,7 @@ public class OrderActivity extends AppCompatActivity {
 
                     try{
                         results = ingredientsTable.where().field("instanceId").eq(instanceId)
-                                .select("name").orderBy("quantity", QueryOrder.Ascending).
+                                .orderBy("quantity", QueryOrder.Ascending).
                                         execute().get();
 
                         runOnUiThread(new Runnable() {

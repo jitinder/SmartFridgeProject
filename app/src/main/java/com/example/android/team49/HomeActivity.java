@@ -44,7 +44,10 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 DataEntryFragment dataEntryFragment = new DataEntryFragment();
 
+                OrderFragment orderFragment = new OrderFragment();
+
                 ViewFragment viewFragment = new ViewFragment();
+
                 switch (item.getItemId()) {
                     case R.id.item_action:
                         frameLayout.removeAllViews();
@@ -56,6 +59,10 @@ public class HomeActivity extends AppCompatActivity {
 
                     case R.id.reorder_action:
                         frameLayout.removeAllViews();
+
+                        FragmentTransaction orderTransaction = getSupportFragmentManager().beginTransaction();
+                        orderTransaction.add(R.id.frame_layout, orderFragment);
+                        orderTransaction.commit();
                         break;
 
                     case R.id.stock_action:

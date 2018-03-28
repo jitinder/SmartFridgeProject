@@ -6,6 +6,8 @@ package com.example.android.team49;
 
 import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
+import java.math.BigInteger;
+
 
 public class Ingredients {
 
@@ -67,7 +69,7 @@ public class Ingredients {
     protected void setUpdatedAt(DateTimeOffset updatedAt) { mUpdatedAt = updatedAt; }
 
     @com.google.gson.annotations.SerializedName("barcode")
-    private int barcodeNumber = 0;
+    private int barcodeNumber;
     public int getBarcodeNumber() {
         return barcodeNumber;
     }
