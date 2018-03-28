@@ -78,6 +78,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         convertView = inflater.inflate(resource, parent, false);
 
         q = (Integer) ingredient.getQuantity();
+        System.out.println(Integer.toString(q)+" "+ingredient.getName());
         //q =5;
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
@@ -128,6 +129,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                                 //System.out.println(results.get(0).getName());
                                 results.get(0).setQuantity(quantity);
                                 ingredientsTable.update(results.get(0));
+                                //Ingredients ingredient = new Ingredients(InstanceID.getInstance(context).getId(),"juice",2323, "22/10/12", 123123 );
+                                //Ingredients ingredient2 = new Ingredients(InstanceID.getInstance(context).getId(),"cheese",79789, "23/11/12", 3 );
+                                //ingredientsTable.insert(ingredient);
+                                //ingredientsTable.insert(ingredient2);
                             }
                         });
                     } catch (final Exception e) {

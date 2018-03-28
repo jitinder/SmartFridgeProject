@@ -31,12 +31,17 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.List;
+
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 
 /**
@@ -57,6 +62,10 @@ public class DataEntryFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
 
     private Button addItem;
+
+    private MobileServiceClient msc;
+    private MobileServiceTable<Ingredients> ingredientsTable;
+    private List<Ingredients> results;
 
     public DataEntryFragment() {
         // Required empty public constructor
@@ -129,13 +138,59 @@ public class DataEntryFragment extends Fragment {
         return view;
     }
 
-    private void addItemToDB(int barcodeNumber, String itemName, String expDate, int quantity) {
+    private void addItemToDB(final int barcodeNumber, final String itemName, String expDate, int quantity) {
         String instanceID = InstanceID.getInstance(getContext()).getId();
-        Ingredient ingredient = new Ingredient(instanceID, itemName, barcodeNumber, expDate, quantity);
+        Ingredients ingredient = new Ingredients(instanceID, itemName, barcodeNumber, expDate, quantity);
         Log.d(TAG, "addItemToDB: "+ingredient.toString());
 
         // Add to DB Here @Venet
+        try {
+            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
+            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            ingredientsTable.insert(ingredient);
 
+            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+
+                    try{
+                        results = ingredientsTable.where().field("name").eq(itemName)
+                                        .execute().get();
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if(results.size() != 0){
+                                    Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    Toast.makeText(getContext(), "error, try again", Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        });
+                    } catch (final Exception e) {
+                        //createAndShowDialogFromTask(e, "Error");
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+            };
+            runAsyncTask(task);
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            return task.execute();
+        }
     }
 
     public Dialog getDatePicker() {

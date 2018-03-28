@@ -9,6 +9,14 @@ import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
 public class Ingredients {
 
+    public Ingredients(String instanceID, String name, int barcodeNumber, String expDate, int quantity) {
+        this.instanceID = instanceID;
+        this.name = name;
+        this.barcodeNumber = barcodeNumber;
+        this.expDate = expDate;
+        this.quantity = quantity;
+    }
+
     @com.google.gson.annotations.SerializedName("id")
     private String mId;
     public String getId(){
@@ -19,36 +27,39 @@ public class Ingredients {
     }
 
     @com.google.gson.annotations.SerializedName("name")
-    private String mName;
-    public String getName(){
-        return mName;
+    private String name;
+    public String getName() {
+        return name;
     }
-    public void setName(String name){
-        mName = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @com.google.gson.annotations.SerializedName("expiration_date")
-    private String mExpr;
-    public String getExpr(){
-        return mExpr;
+    private String expDate;
+    public String getExpDate() {
+        return expDate;
     }
-    public void setExpr(String expr){
-        mExpr = expr;
+    public void setExpDate(String expDate) {
+        this.expDate = expDate;
     }
 
-    @com.google.gson.annotations.SerializedName("quantity")
-    private Integer mQuantity;
-    public Integer getQuantity() { return mQuantity; }
-    public void setQuantity(Integer quantity)
-    {mQuantity = quantity;}
+    @com.google.gson.annotations.SerializedName("QUANTITY")
+    private int quantity;
+    public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     @com.google.gson.annotations.SerializedName("instanceId")
-    private String mInstanceId;
+    private String instanceID;
     public String getInstanceId(){
-        return mInstanceId;
+        return instanceID;
     }
-    public void setInstanceId(String instanceId){
-        mInstanceId = instanceId;
+    public void setInstanceID(String instanceID) {
+        this.instanceID = instanceID;
     }
 
     @com.google.gson.annotations.SerializedName("createdat")
@@ -63,11 +74,13 @@ public class Ingredients {
     public DateTimeOffset getUpdatedAt() { return mUpdatedAt; }
     protected void setUpdatedAt(DateTimeOffset updatedAt) { mUpdatedAt = updatedAt; }
 
-    public Ingredients(String name, String expr, Integer quantity, String instanceId){
-        this.setName(name);
-        this.setExpr(expr);
-        this.setQuantity(quantity);
-        this.setInstanceId(instanceId);
+    @com.google.gson.annotations.SerializedName("barcode")
+    private int barcodeNumber = 0;
+    public int getBarcodeNumber() {
+        return barcodeNumber;
+    }
+    public void setBarcodeNumber(int barcodeNumber) {
+        this.barcodeNumber = barcodeNumber;
     }
 
 }
