@@ -20,10 +20,6 @@ public class OrderAdapter extends ArrayAdapter<Ingredients> {
 
     private Context context;
     private int resource;
-    private LayoutInflater inflater;
-    private Integer q;
-    private String quantity_str;
-    private Ingredients ingredient;
 
     private static class ListViewHolder {
         private TextView name;
@@ -43,27 +39,25 @@ public class OrderAdapter extends ArrayAdapter<Ingredients> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        inflater = ((Activity) context).getLayoutInflater();
-        ListViewHolder holder = new ListViewHolder();
-        convertView = (RelativeLayout) inflater.inflate(resource, null);
-        ingredient = getItem(position);
-        q = (Integer) ingredient.getQuantity();
-        quantity_str = Integer.toString(q);
+        final Ingredients ingredient = getItem(position);
+        final ListViewHolder holder = new ListViewHolder();
+
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        convertView = inflater.inflate(resource, parent, false);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(quantity_str);
-        //TODO: FIX GET QUANTITY, NULL?
+        holder.quantity.setText(""+ingredient.getQuantity());
 
         holder.order = convertView.findViewById(R.id.ibOrder);
         holder.order.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String item = ingredient.getName();
-                String url = "https://www.amazon.co.uk/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords="+item;
+                String url = "https://www.amazon.co.uk/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords="+ingredient.getName();
+                System.out.println(ingredient.getName());
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 context.startActivity(i);

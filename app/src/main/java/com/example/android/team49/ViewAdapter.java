@@ -46,8 +46,6 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
     private Context context;
     private int resource;
-    private LayoutInflater inflater;
-    private String quantity_str;
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
 
