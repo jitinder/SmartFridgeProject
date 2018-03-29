@@ -55,6 +55,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         private TextView quantity;
         private TextView expiryDate;
         private TextView add;
+        private Button orderButton;
 
 
         ListViewHolder() {
@@ -74,6 +75,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         final ListViewHolder holder = new ListViewHolder();
         final String name = ingredient.getName();
         final String expiryDate = "Expiry Date: " + ingredient.getExpDate();
+        final
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
@@ -81,7 +83,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         //quantity_str = Integer.toString(q);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
-        holder.name.setText(ingredient.getName());
+        holder.name.setText(name);
 
         holder.expiryDate = convertView.findViewById(R.id.tvExpiryDate);
         holder.expiryDate.setText(expiryDate);
@@ -106,6 +108,17 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             public void onClick(View v) {
                 holder.quantity.setText(""+(ingredient.getQuantity()+1));
                 update(ingredient, ingredient.getQuantity()+1);
+            }
+        });
+
+        holder.orderButton = convertView.findViewById(R.id.order_button);
+        holder.orderButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.amazon.co.uk/s?url=search-alias%3Daps&field-keywords="+ingredient.getName().replace(" ", "+");
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                context.startActivity(i);
             }
         });
 
