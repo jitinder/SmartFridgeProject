@@ -68,6 +68,12 @@ public class AccountFragment extends Fragment {
                 showChangePin();
             }
         });
+        resetAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConfirmReset();
+            }
+        });
 
         instanceId = InstanceID.getInstance(view.getContext()).getId();
         getUserData();
@@ -113,6 +119,30 @@ public class AccountFragment extends Fragment {
         AlertDialog dialog = alert.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
+    }
+
+    private void showConfirmReset(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Reset Account");
+        alert.setMessage("This will remove all your account data. Are you sure you want to do this?");
+        alert.setCancelable(false);
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Blank
+            }
+        });
+        alert.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Delete all Ingredients and Recipes
+            }
+        });
+
+        AlertDialog dialog = alert.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.red));
+
     }
 
     private void getUserData(){
