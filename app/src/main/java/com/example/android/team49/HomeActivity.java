@@ -43,10 +43,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 DataEntryFragment dataEntryFragment = new DataEntryFragment();
-
                 OrderFragment orderFragment = new OrderFragment();
-
                 ViewFragment viewFragment = new ViewFragment();
+
+                AccountFragment accountFragment = new AccountFragment();
 
                 switch (item.getItemId()) {
                     case R.id.item_action:
@@ -79,6 +79,10 @@ public class HomeActivity extends AppCompatActivity {
 
                     case R.id.account_action:
                         frameLayout.removeAllViews();
+
+                        FragmentTransaction accountTransaction = getSupportFragmentManager().beginTransaction();
+                        accountTransaction.add(R.id.frame_layout, accountFragment);
+                        accountTransaction.commit();
                         break;
                 }
                 return true;

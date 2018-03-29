@@ -119,7 +119,8 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:gravity="center"
-            android:background="@android:color/holo_orange_light"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
             android:text="@string/minus_symbol"/>
 
         <TextView
@@ -137,7 +138,8 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:gravity="center"
-            android:background="@android:color/holo_orange_light"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
             android:text="@string/plus"/>
 
     </LinearLayout>

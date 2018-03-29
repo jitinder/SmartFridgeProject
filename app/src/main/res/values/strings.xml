@@ -47,5 +47,10 @@
     <string name="quantity">Quantity</string>
     <string name="plus">+</string>
     <string name="minus_symbol">-</string>
+    <string name="change_pin">Change Pin</string>
+    <string name="my_recipes">My Recipes</string>
+    <string name="reset_account">Reset Account</string>
+    <string name="old_pin">Old Pin</string>
+    <string name="new_pin">New Pin</string>
 
 </resources>
