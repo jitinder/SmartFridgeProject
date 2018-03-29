@@ -45,5 +45,7 @@
     <string name="click_to_capture_two"><![CDATA[<- Click to Capture]]></string>
     <string name="optional">(Optional)</string>
     <string name="quantity">Quantity</string>
+    <string name="plus">+</string>
+    <string name="minus_symbol">-</string>
 
 </resources>

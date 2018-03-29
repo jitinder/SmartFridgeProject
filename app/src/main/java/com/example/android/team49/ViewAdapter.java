@@ -51,9 +51,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
     private static class ListViewHolder {
         private TextView name;
-        private ImageButton minus;
+        private TextView minus;
         private TextView quantity;
-        private ImageButton add;
+        private TextView expiryDate;
+        private TextView add;
 
 
         ListViewHolder() {
@@ -72,6 +73,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
         final String name = ingredient.getName();
+        final String expiryDate = "Expiry Date: " + ingredient.getExpDate();
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
@@ -81,7 +83,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         holder.name = convertView.findViewById(R.id.tvIngredient);
         holder.name.setText(ingredient.getName());
 
-        holder.minus = convertView.findViewById(R.id.ibMinus);
+        holder.expiryDate = convertView.findViewById(R.id.tvExpiryDate);
+        holder.expiryDate.setText(expiryDate);
+
+        holder.minus = convertView.findViewById(R.id.bMinus);
         holder.minus.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -94,7 +99,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
         holder.quantity.setText(""+ingredient.getQuantity());
 
-        holder.add = convertView.findViewById(R.id.ibAdd);
+        holder.add = convertView.findViewById(R.id.bPlus);
         holder.add.setOnClickListener(new View.OnClickListener() {
 
             @Override

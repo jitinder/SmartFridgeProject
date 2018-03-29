@@ -104,7 +104,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 }
                             }
                         });
-                    } catch (final Exception e) {
+                    } catch (Exception e) {
                         Toast.makeText(LoginActivity.this, "There was an error Signing you in, Please make sure you have registered.", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
