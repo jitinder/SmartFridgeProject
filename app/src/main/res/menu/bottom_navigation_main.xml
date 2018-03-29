@@ -9,13 +9,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/reorder_action"
-        android:enabled="true"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="Reorder"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/stock_action"
         android:enabled="true"
         android:icon="@drawable/ic_view_list_black_24dp"
@@ -27,13 +20,6 @@
         android:enabled="true"
         android:icon="@drawable/ic_local_dining_black_24dp"
         android:title="Recipes"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/account_action"
-        android:enabled="true"
-        android:icon="@drawable/ic_person_black_24dp"
-        android:title="Account"
         app:showAsAction="ifRoom" />
 
 </menu>

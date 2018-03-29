@@ -1,6 +1,8 @@
 package com.example.android.team49;
 
+import android.accounts.Account;
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.v4.app.FragmentTransaction;
@@ -34,55 +36,69 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
 
-        disableShiftMode(bottomNavigationView);
+        //disableShiftMode(bottomNavigationView);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            AccountFragment accountFragment = new AccountFragment();
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                switch (item.getItemId()){
+                    case R.id.account_action:
+                    case R.id.account_string_action:
+                        if(getSupportFragmentManager().findFragmentById(frameLayout.getId()) != accountFragment) {
+                            fragmentTransaction.replace(frameLayout.getId(), accountFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
+
+                        final Menu menu = bottomNavigationView.getMenu();
+                        for(int i = 0; i < menu.size(); i++) {
+                            menu.getItem(i).setCheckable(false);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+
+        final DataEntryFragment dataEntryFragment = new DataEntryFragment();
+        final ViewFragment viewFragment = new ViewFragment();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                DataEntryFragment dataEntryFragment = new DataEntryFragment();
-                OrderFragment orderFragment = new OrderFragment();
-                ViewFragment viewFragment = new ViewFragment();
-
-                AccountFragment accountFragment = new AccountFragment();
+                final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                final Menu menu = bottomNavigationView.getMenu();
+                for(int i = 0; i < menu.size(); i++) {
+                    menu.getItem(i).setCheckable(true);
+                }
 
                 switch (item.getItemId()) {
                     case R.id.item_action:
-                        frameLayout.removeAllViews();
-
-                        FragmentTransaction itemTransaction = getSupportFragmentManager().beginTransaction();
-                        itemTransaction.add(R.id.frame_layout, dataEntryFragment);
-                        itemTransaction.commit();
-                        break;
-
-                    case R.id.reorder_action:
-                        frameLayout.removeAllViews();
-
-                        FragmentTransaction orderTransaction = getSupportFragmentManager().beginTransaction();
-                        orderTransaction.add(R.id.frame_layout, orderFragment);
-                        orderTransaction.commit();
+                        if(getSupportFragmentManager().findFragmentById(frameLayout.getId()) != dataEntryFragment) {
+                            fragmentTransaction.replace(frameLayout.getId(), dataEntryFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
                         break;
 
                     case R.id.stock_action:
-                        frameLayout.removeAllViews();
-
-                        FragmentTransaction stockTransaction = getSupportFragmentManager().beginTransaction();
-                        stockTransaction.add(R.id.frame_layout, viewFragment);
-                        stockTransaction.commit();
+                        if(getSupportFragmentManager().findFragmentById(frameLayout.getId()) != viewFragment) {
+                            fragmentTransaction.replace(frameLayout.getId(), viewFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
                         break;
 
                     case R.id.recipes_action:
                         frameLayout.removeAllViews();
                         break;
 
-                    case R.id.account_action:
-                        frameLayout.removeAllViews();
-
-                        FragmentTransaction accountTransaction = getSupportFragmentManager().beginTransaction();
-                        accountTransaction.add(R.id.frame_layout, accountFragment);
-                        accountTransaction.commit();
+                    default:
                         break;
                 }
                 return true;
@@ -119,8 +135,5 @@ public class HomeActivity extends AppCompatActivity {
         // Inflate the menu, this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.top_bar, menu);
         return true;
-    }
-
-    private void logOut(){
     }
 }
