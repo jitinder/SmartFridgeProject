@@ -74,7 +74,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
         final String name = ingredient.getName();
-        final String expiryDate = "Expiry Date: " + ingredient.getExpDate();
+        final String expiryDate = "Expires On: " + ingredient.getExpDate();
         final
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();

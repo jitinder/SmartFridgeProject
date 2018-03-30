@@ -37,9 +37,6 @@
         </activity>
         <activity android:name=".RegisterActivity"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".DataEntryActivity"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
     </application>
 
 </manifest>

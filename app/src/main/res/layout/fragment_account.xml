@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:id="@+id/logout_button"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/shape"
                 android:textColor="@color/red"
                 android:text="@string/logout"/>
@@ -70,6 +70,7 @@
                 android:id="@+id/reset_account_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/shape"
                 android:textColor="@color/red"

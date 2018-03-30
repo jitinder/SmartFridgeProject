@@ -96,9 +96,11 @@
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:layout_gravity="center"
         android:drawableTop="@drawable/ic_shopping_basket_black_24dp"
+        android:textSize="10sp"
+        style="?android:attr/borderlessButtonStyle"
         android:text="@string/order"/>
 
 </LinearLayout>
