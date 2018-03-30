@@ -32,6 +32,9 @@
     <string name="facebook_app_id">594694270867248</string>
     <string name="fb_login_protocol_scheme">fb594694270867248</string>
 
+    <string name="yummly_app_id">bd3d9a8a</string>
+    <string name="yummly_app_key">aae41863adcb337b442a93c71fb77344</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="scan_barcode">Scan</string>

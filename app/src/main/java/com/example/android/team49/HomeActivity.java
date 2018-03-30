@@ -68,6 +68,7 @@ public class HomeActivity extends AppCompatActivity {
 
         final DataEntryFragment dataEntryFragment = new DataEntryFragment();
         final ViewFragment viewFragment = new ViewFragment();
+        final RecipesFragment recipesFragment = new RecipesFragment();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -95,10 +96,11 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.recipes_action:
-                        frameLayout.removeAllViews();
-                        break;
-
-                    default:
+                        if(getSupportFragmentManager().findFragmentById(frameLayout.getId()) != recipesFragment) {
+                            fragmentTransaction.replace(frameLayout.getId(), recipesFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
                         break;
                 }
                 return true;
