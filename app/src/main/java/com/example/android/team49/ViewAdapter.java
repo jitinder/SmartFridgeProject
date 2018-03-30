@@ -76,7 +76,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
         final String name = ingredient.getName();
-        final String expiryDate = "Expires On: " + ingredient.getExpDate();
+        final String expiryDate = "Expires: " + ingredient.getExpDate();
         final
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -95,8 +95,6 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
             @Override
             public void onClick(View v) {
-                holder.quantity.setText(""+(ingredient.getQuantity()-1));
-                update(ingredient, ingredient.getQuantity()-1);
                 if(ingredient.getQuantity()-1 == 0) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                     alert.setTitle("Removing item");
@@ -105,8 +103,6 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            holder.quantity.setText(""+1);
-                            update(ingredient, 1);
                         }
                     });
                     alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -171,20 +167,11 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //System.out.println(results.get(0).getName());
-                                //results.get(0).setQuantity(quantity);
                                 ingredient.setQuantity(quantity);
                                 ingredientsTable.update(ingredient);
-                                //ingredientsTable.update(results.get(0));
-
-                                //Ingredients ingredient = new Ingredients(InstanceID.getInstance(context).getId(),"juice",2323, "22/10/12", 123123 );
-                                //Ingredients ingredient2 = new Ingredients(InstanceID.getInstance(context).getId(),"cheese",79789, "23/11/12", 3 );
-                                //ingredientsTable.insert(ingredient);
-                                //ingredientsTable.insert(ingredient2);
                             }
                         });
                     } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
                         e.printStackTrace();
                     }
                     return null;

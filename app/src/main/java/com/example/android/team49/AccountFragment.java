@@ -201,6 +201,7 @@ public class AccountFragment extends Fragment {
                     editor.remove("user");
                     editor.apply();
                     startActivity(out);
+                    getActivity().finish();
                 } catch (Exception e){
                     dialog.dismiss();
                     e.printStackTrace();

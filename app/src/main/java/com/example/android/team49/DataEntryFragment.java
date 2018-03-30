@@ -129,7 +129,7 @@ public class DataEntryFragment extends Fragment {
                     barcodeNumber = 0;
                 }
                 String name = itemName.getText().toString();
-                String date = datePick.getText().toString();
+                String date = datePick.getText().toString().replace(" ", "");
                 int quantity = numberPicker.getValue();
                 if(name.equals("") || date.equalsIgnoreCase(getString(R.string.pick_a_date)) || date.equals("")){
                     Toast.makeText(getContext(), "Please Fill out all required information properly", Toast.LENGTH_SHORT).show();
@@ -147,7 +147,6 @@ public class DataEntryFragment extends Fragment {
         Ingredients ingredient = new Ingredients(instanceID, name, barcodeNumber, expDate, quantity);
         Log.d(TAG, "addItemToDB: "+ingredient.toString());
 
-        // Add to DB Here @Venet
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
             ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
@@ -173,16 +172,9 @@ public class DataEntryFragment extends Fragment {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-                                if(results.size() != 0){
                                     Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
                                     itemName.setText("");
                                     itemBarcode.setText("");
-                                }
-                                else{
-                                    Toast.makeText(getContext(), "error, try again", Toast.LENGTH_LONG).show();
-                                }
-
                             }
                         });
                     } catch (final Exception e) {
