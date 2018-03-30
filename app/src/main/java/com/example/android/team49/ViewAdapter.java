@@ -99,10 +99,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
             @Override
             public void onClick(View v) {
-                if(ingredient.getQuantity()-1 == 0) {
+                if (ingredient.getQuantity() - 1 == 0) {
                     AlertDialog.Builder reminder = new AlertDialog.Builder(getContext());
                     reminder.setTitle("Remember to buy");
-                    reminder.setMessage("Would you like us to remind you to buy "+ingredient.getName());
+                    reminder.setMessage("Would you like us to remind you to buy " + ingredient.getName());
                     reminder.setCancelable(false);
                     reminder.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
                         @Override
@@ -114,9 +114,9 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                scheduleNotification(getNotification("You've ran out!",
-                                        "remember to buy "+ingredient.getName()), 1000);
-                            } catch (Exception e){
+                                scheduleNotification(getNotification("Reminder",
+                                        "remember to buy " + ingredient.getName()), 86400000);
+                            } catch (Exception e) {
                                 dialog.dismiss();
                                 e.printStackTrace();
                             }
@@ -126,9 +126,9 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                scheduleNotification(getNotification("You've ran out!",
-                                        "remember to buy "+ingredient.getName()), 5000);
-                            } catch (Exception e){
+                                scheduleNotification(getNotification("Reminder",
+                                        "remember to buy " + ingredient.getName()), 3600000);
+                            } catch (Exception e) {
                                 dialog.dismiss();
                                 e.printStackTrace();
                             }
@@ -139,10 +139,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.red));
                 }
 
-                if(ingredient.getQuantity()-1 == -1){
+                if (ingredient.getQuantity() - 1 == -1) {
                     AlertDialog.Builder delete = new AlertDialog.Builder(getContext());
                     delete.setTitle("Delete item");
-                    delete.setMessage("Are you sure you want to delete "+ingredient.getName());
+                    delete.setMessage("Are you sure you want to delete " + ingredient.getName());
                     delete.setCancelable(false);
 
                     delete.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -152,7 +152,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                                 remove(ingredient);
                                 notifyDataSetChanged();
                                 ingredientsTable.delete(ingredient);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 dialog.dismiss();
                                 e.printStackTrace();
                             }
@@ -162,9 +162,9 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                holder.quantity.setText(""+0);
+                                holder.quantity.setText("" + 0);
                                 update(ingredient, 0);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 dialog.dismiss();
                                 e.printStackTrace();
                             }
@@ -175,21 +175,21 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.red));
                 }
 
-                holder.quantity.setText(""+(ingredient.getQuantity()-1));
-                update(ingredient, ingredient.getQuantity()-1);
+                holder.quantity.setText("" + (ingredient.getQuantity() - 1));
+                update(ingredient, ingredient.getQuantity() - 1);
             }
         });
 
         holder.quantity = convertView.findViewById(R.id.tvQuantity);
-        holder.quantity.setText(""+ingredient.getQuantity());
+        holder.quantity.setText("" + ingredient.getQuantity());
 
         holder.add = convertView.findViewById(R.id.bPlus);
         holder.add.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                holder.quantity.setText(""+(ingredient.getQuantity()+1));
-                update(ingredient, ingredient.getQuantity()+1);
+                holder.quantity.setText("" + (ingredient.getQuantity() + 1));
+                update(ingredient, ingredient.getQuantity() + 1);
             }
         });
 
@@ -197,7 +197,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         holder.orderButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://www.amazon.co.uk/s?url=search-alias%3Daps&field-keywords="+ingredient.getName().replace(" ", "+");
+                String url = "https://www.amazon.co.uk/s?url=search-alias%3Daps&field-keywords=" + ingredient.getName().replace(" ", "+");
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 context.startActivity(i);
@@ -262,8 +262,9 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         PendingIntent pending = PendingIntent.getBroadcast(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pending);
     }
 }
+
 
