@@ -32,7 +32,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textSize="14sp"
-            android:textColor="@color/grey"/>
+            android:textColor="@color/grey"
+            android:singleLine="true"
+            android:scrollHorizontally="true"/>
 
         <TextView
             android:id="@+id/tvDataThree"

@@ -7,9 +7,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +97,35 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             public void onClick(View v) {
                 holder.quantity.setText(""+(ingredient.getQuantity()-1));
                 update(ingredient, ingredient.getQuantity()-1);
+                if(ingredient.getQuantity()-1 == 0) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Removing item");
+                    alert.setMessage("Are you sure you want to delete this item?");
+                    alert.setCancelable(false);
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            holder.quantity.setText(""+1);
+                            update(ingredient, 1);
+                        }
+                    });
+                    alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                remove(ingredient);
+                                notifyDataSetChanged();
+                                ingredientsTable.delete(ingredient);
+                            } catch (Exception e){
+                                dialog.dismiss();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    AlertDialog dialog = alert.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.red));
+                }
             }
         });
 
@@ -125,17 +156,18 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         return convertView;
     }
 
-    private void update(final Ingredients ingredient, final int quantity){
+
+    private void update(final Ingredients ingredient, final int quantity) {
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
             ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    try{
+                    try {
                         //System.out.println(name);
                         final List<Ingredients> results = ingredientsTable.where().field("name").eq(ingredient.getName()).
-                                        execute().get();
+                                execute().get();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
