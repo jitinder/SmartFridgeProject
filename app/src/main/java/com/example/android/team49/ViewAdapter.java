@@ -2,7 +2,10 @@ package com.example.android.team49;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +14,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,16 +100,52 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
             @Override
             public void onClick(View v) {
                 if(ingredient.getQuantity()-1 == 0) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setTitle("Removing item");
-                    alert.setMessage("Are you sure you want to delete this item?");
-                    alert.setCancelable(false);
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    AlertDialog.Builder reminder = new AlertDialog.Builder(getContext());
+                    reminder.setTitle("Remember to buy");
+                    reminder.setMessage("Would you like us to remind you to buy "+ingredient.getName());
+                    reminder.setCancelable(false);
+                    reminder.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //
                         }
                     });
-                    alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    reminder.setPositiveButton("Yes, remind me tomorrow", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                scheduleNotification(getNotification("You've ran out!",
+                                        "remember to buy "+ingredient.getName()), 1000);
+                            } catch (Exception e){
+                                dialog.dismiss();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    reminder.setNeutralButton("Yes, remind me in an hour", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                scheduleNotification(getNotification("You've ran out!",
+                                        "remember to buy "+ingredient.getName()), 5000);
+                            } catch (Exception e){
+                                dialog.dismiss();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    AlertDialog dialog = reminder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.red));
+                }
+
+                if(ingredient.getQuantity()-1 == -1){
+                    AlertDialog.Builder delete = new AlertDialog.Builder(getContext());
+                    delete.setTitle("Delete item");
+                    delete.setMessage("Are you sure you want to delete "+ingredient.getName());
+                    delete.setCancelable(false);
+
+                    delete.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
@@ -118,10 +158,25 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                             }
                         }
                     });
-                    AlertDialog dialog = alert.create();
+                    delete.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                holder.quantity.setText(""+0);
+                                update(ingredient, 0);
+                            } catch (Exception e){
+                                dialog.dismiss();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    AlertDialog dialog = delete.create();
                     dialog.show();
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.red));
                 }
+
+                holder.quantity.setText(""+(ingredient.getQuantity()-1));
+                update(ingredient, ingredient.getQuantity()-1);
             }
         });
 
@@ -189,6 +244,26 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         } else {
             return task.execute();
         }
+    }
+
+    private Notification getNotification(String content, String title) {
+        Notification.Builder builder = new Notification.Builder(getContext());
+        builder.setContentTitle(title);
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.fruit_icon_black);
+        return builder.build();
+    }
+
+    private void scheduleNotification(Notification notification, int delay) {
+
+        Intent notificationIntent = new Intent(getContext(), Notifications.class);
+        notificationIntent.putExtra(Notifications.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(Notifications.NOTIFICATION, notification);
+        PendingIntent pending = PendingIntent.getBroadcast(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pending);
     }
 }
 
