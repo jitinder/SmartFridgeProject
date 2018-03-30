@@ -58,13 +58,24 @@
                 android:text="@string/my_recipes"/>
 
             <Button
-                android:id="@+id/reset_account_button"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/logout_button"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/shape"
                 android:textColor="@color/red"
+                android:text="@string/logout"/>
+
+            <Button
+                android:id="@+id/reset_account_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape"
+                android:textColor="@color/red"
                 android:text="@string/reset_account"/>
+
+
 
         </LinearLayout>
 

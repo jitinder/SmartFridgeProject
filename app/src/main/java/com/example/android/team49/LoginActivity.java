@@ -3,11 +3,13 @@ package com.example.android.team49;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,7 +51,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         registerButton.setOnClickListener(LoginActivity.this);
         loginButton.setOnClickListener(LoginActivity.this);
 
-        login_state = getSharedPreferences("login", MODE_PRIVATE);
+        login_state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //TODO:REMEMBER TO ADD BACK AFTER DONE TESTING
+        String state = login_state.getString("user", "");
+        if(!state.equalsIgnoreCase("")){
+            home();
+        }
     }
 
     @Override
@@ -98,7 +105,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 //mAdapter.clear();
                                 if (results.size() != 0 && results.get(0).getPin().equals(pin)) {
                                     home();
-                                    login_state.edit().putBoolean("logged", true).apply();
+                                    SharedPreferences.Editor editor = login_state.edit();
+                                    editor.putString("user", "logged");
+                                    editor.apply();
                                 } else {
                                     signInError();
                                 }
@@ -170,5 +179,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         Intent logged = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(logged);
         finish();
+    }
+
+    public void setLoginState(SharedPreferences login_state, String state){
+        login_state.edit().putBoolean("state", true).apply();
+        this.login_state = login_state;
+    }
+
+    public SharedPreferences getLoginState(){
+        return this.login_state;
     }
 }

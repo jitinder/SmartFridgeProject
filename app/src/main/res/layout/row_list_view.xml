@@ -22,7 +22,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textSize="16sp"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent"
+            android:singleLine="true"
+            android:scrollHorizontally="true"/>
 
         <TextView
             android:id="@+id/tvExpiryDate"
