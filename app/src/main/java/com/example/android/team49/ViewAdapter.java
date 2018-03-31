@@ -104,7 +104,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     reminder.setTitle("Remember to buy");
                     reminder.setMessage("Would you like us to remind you to buy " + ingredient.getName());
                     reminder.setCancelable(false);
-                    reminder.setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                    reminder.setNeutralButton("No Thanks", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //
@@ -122,7 +122,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                             }
                         }
                     });
-                    reminder.setNeutralButton("Yes, remind me in an hour", new DialogInterface.OnClickListener() {
+                    reminder.setNegativeButton("Yes, remind me in an hour", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
@@ -136,7 +136,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     });
                     AlertDialog dialog = reminder.create();
                     dialog.show();
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.red));
+                    dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(context.getResources().getColor(R.color.red));
                 }
 
                 if (ingredient.getQuantity() - 1 == -1) {

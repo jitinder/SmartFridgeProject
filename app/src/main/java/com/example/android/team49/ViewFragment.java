@@ -254,7 +254,7 @@ public class ViewFragment extends Fragment {
                             }
                         });
                     } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
+                        getIngredients(instanceId);
                         e.printStackTrace();
                     }
                     return null;
