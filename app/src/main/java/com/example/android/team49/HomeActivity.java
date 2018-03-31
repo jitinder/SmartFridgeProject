@@ -138,4 +138,9 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.top_bar, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        // Do Here what ever you want do on back press;
+    }
 }

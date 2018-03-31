@@ -4,25 +4,18 @@ import java.util.ArrayList;
 
 public class Recipe {
 
-    String name = "";
-    ArrayList<String> ingredients = new ArrayList<>();
-    ArrayList<String> course = new ArrayList<>();
-    String imageUrl = "";
-    int rating = 0;
+    String name;
     String source;
-    String id;
-    ArrayList<String> cuisine = new ArrayList<>();
+    String imageURL;
+    String sourceURL;
+    ArrayList<String> ingredients;
 
-    public Recipe(String name, ArrayList<String> ingredients, ArrayList<String> course, ArrayList<String> cuisine,
-                  String imageUrl, int rating, String source, String id) {
+    public Recipe(String name, String source, String imageURL, String sourceURL, ArrayList<String> ingredients) {
         this.name = name;
-        this.ingredients = ingredients;
-        this.imageUrl = imageUrl;
-        this.rating = rating;
         this.source = source;
-        this.id = id;
-        this.course = course;
-        this.cuisine = cuisine;
+        this.imageURL = imageURL;
+        this.sourceURL = sourceURL;
+        this.ingredients = ingredients;
     }
 
     public String getName() {
@@ -33,50 +26,42 @@ public class Recipe {
         this.name = name;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public ArrayList<String> getCourse() {
-        return course;
-    }
-
-    public void setCourse(ArrayList<String> course) {
-        this.course = course;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
+    public String getSource() {
+        return source;
     }
 
     public void setSource(String source) {
         this.source = source;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public ArrayList<String> getCuisine() {
-        return cuisine;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public void setCuisine(ArrayList<String> cuisine) {
-        this.cuisine = cuisine;
+    public String getSourceURL() {
+        return sourceURL;
+    }
+
+    public void setSourceURL(String sourceURL) {
+        this.sourceURL = sourceURL;
+    }
+
+    public ArrayList<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(ArrayList<String> ingredients) {
+        this.ingredients = ingredients;
     }
 
     @Override
     public String toString() {
-        String toReturn =  "Name = " + name + "\n Ingredients = " + ingredients.toString() + "\n Course = " + course.toString()
-                + "\n Cuisine = " + cuisine.toString() + "\n ImageURL = " +imageUrl + "\n Rating = " + rating +
-                "\n Source = " + source + "\n ID = " +id;
-        return toReturn;
+        return "Recipe: Name = " + name + " Source =  " + source + " imageURL = " + imageURL + " SourceURL = " + sourceURL + " Ingredients = " +ingredients.toString();
     }
-
 }
 
 

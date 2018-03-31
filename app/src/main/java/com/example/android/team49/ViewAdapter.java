@@ -37,7 +37,10 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import org.w3c.dom.Text;
 
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -80,8 +83,15 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         final Ingredients ingredient = getItem(position);
         final ListViewHolder holder = new ListViewHolder();
         final String name = ingredient.getName();
-        final String expiryDate = "Expires: " + ingredient.getExpDate();
-        final
+        String expiryDate = "";
+        Date currentDate = new Date();
+        Date itemExpiryDate = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            itemExpiryDate = format.parse(ingredient.getExpDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
@@ -92,6 +102,12 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         holder.name.setText(name);
 
         holder.expiryDate = convertView.findViewById(R.id.tvExpiryDate);
+        if(itemExpiryDate.before(currentDate)){
+            expiryDate = "Expired: " + ingredient.getExpDate();
+            holder.expiryDate.setTextColor(convertView.getResources().getColor(R.color.red));
+        } else {
+            expiryDate = "Expires: " + ingredient.getExpDate();
+        }
         holder.expiryDate.setText(expiryDate);
 
         holder.minus = convertView.findViewById(R.id.bMinus);

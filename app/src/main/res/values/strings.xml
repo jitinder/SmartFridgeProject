@@ -56,5 +56,12 @@
     <string name="logout">Log Out</string>
     <string name="old_pin">Old Pin</string>
     <string name="new_pin">New Pin</string>
+    <string name="rating">Rating:</string>
+    <string name="source">Source:</string>
+    <string name="course">Course:</string>
+    <string name="cuisine">Cuisine:</string>
+    <string name="visit_website">Visit Website</string>
+    <string name="search">Search</string>
+    <string name="recipe_name">Recipe Name</string>
 
 </resources>
