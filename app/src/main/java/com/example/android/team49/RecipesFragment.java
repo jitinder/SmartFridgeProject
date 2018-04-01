@@ -68,6 +68,7 @@ public class RecipesFragment extends Fragment {
     private MobileServiceTable<Ingredients> ingredientsTable;
     private ArrayList<Ingredients> results;
     private List<String> ingredients;
+    private ArrayList<String> chosen;
 
     private ProgressDialog progressRecipe;
     private ProgressDialog progressIngredients;
@@ -120,7 +121,7 @@ public class RecipesFragment extends Fragment {
         chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ArrayList selected = new ArrayList();
+                final ArrayList<Integer> selected = new ArrayList();
                 CharSequence[] cs = ingredients.toArray(new CharSequence[ingredients.size()]);
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
                         .setTitle("Choose the ingredients you want to use")
@@ -130,13 +131,17 @@ public class RecipesFragment extends Fragment {
                                 if (isChecked) {
                                     selected.add(indexSelected);
                                 } else if (selected.contains(indexSelected)) {
-                                    selected.remove(Integer.valueOf(indexSelected));
+                                    selected.remove(indexSelected);
+                                }
+                                chosen = new ArrayList<>();
+                                for(int i : selected){
+                                    chosen.add(results.get(i).getName());
                                 }
                             }
                         }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam(query, selected)));
+                                recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam("", chosen)));
                                 recipeListView.setVisibility(View.VISIBLE);
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
