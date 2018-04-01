@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,7 +69,8 @@ public class RecipesFragment extends Fragment {
     private ArrayList<Ingredients> results;
     private List<String> ingredients;
 
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressRecipe;
+    private ProgressDialog progressIngredients;
 
 
     public RecipesFragment() {
@@ -100,9 +102,10 @@ public class RecipesFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog progressDialog = new ProgressDialog(getContext());
-                progressDialog.setMessage("Fetching Recipes... Please Wait");
-                progressDialog.show();
+                progressRecipe = new ProgressDialog(getContext());
+                progressRecipe.setMessage("Fetching those recipes for you...");
+                progressRecipe.show();
+                //TODO: FIX PROGRESS DIALOG
                 query = recipeEdit.getText().toString();
                 if(!query.equalsIgnoreCase("")){
                     recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam(query)));
@@ -110,9 +113,10 @@ public class RecipesFragment extends Fragment {
                 } else {
                     recipeListView.setVisibility(View.INVISIBLE);
                 }
-                progressDialog.dismiss();
+                progressRecipe.dismiss();
             }
         });
+
         chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +136,8 @@ public class RecipesFragment extends Fragment {
                         }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                //TODO: @SIDAK SEARCH API BASED ON SELECTED ARRAY LIST
+                                recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam(query, selected)));
+                                recipeListView.setVisibility(View.VISIBLE);
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -160,9 +165,9 @@ public class RecipesFragment extends Fragment {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    progressDialog = new ProgressDialog(getContext());
-                    progressDialog.setMessage("Getting your items... Please Wait");
-                    progressDialog.show();
+                    progressIngredients = new ProgressDialog(getContext());
+                    progressIngredients.setMessage("Getting your items... Please Wait");
+                    progressIngredients.show();
                 }
 
                 @Override
@@ -191,8 +196,8 @@ public class RecipesFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
-                    if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
+                    if(progressIngredients.isShowing()){
+                        progressIngredients.dismiss();
                     }
                 }
             };
