@@ -65,5 +65,6 @@
     <string name="recipe_name">Recipe Name</string>
     <string name="ingredients_to_include">Ingredients to Include</string>
     <string name="choose">Choose</string>
+    <string name="pick">What Can I Make Now?</string>
 
 </resources>

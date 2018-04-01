@@ -32,6 +32,16 @@
             android:layout_weight="1"
             android:text="@string/search"/>
 
+        <Button
+            android:id="@+id/ingredient_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/shape"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/pick"/>
+
     </LinearLayout>
 
     <ListView
