@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,9 +81,11 @@ public class RecipesFragment extends Fragment {
                 progressDialog.setMessage("Fetching Recipes... Please Wait");
                 progressDialog.show();
                 query = recipeEdit.getText().toString();
-                if(query != ""){
+                if(!query.equalsIgnoreCase("")){
                     recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam(query)));
                     recipeListView.setVisibility(View.VISIBLE);
+                } else {
+                    recipeListView.setVisibility(View.INVISIBLE);
                 }
                 progressDialog.dismiss();
             }
@@ -104,8 +107,48 @@ public class RecipesFragment extends Fragment {
             JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
             JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
             int count = rootobj.get("count").getAsInt();
-            if(count > 5){
-                count = 5;
+            if(count > 10){
+                count = 10;
+            }
+            for(int i = 0; i < count; i++){
+                JsonArray hits = rootobj.getAsJsonArray("hits");
+                JsonObject recipeRoot = hits.get(i).getAsJsonObject();
+                JsonObject recipeData = recipeRoot.get("recipe").getAsJsonObject();
+                String recipeName = recipeData.get("label").getAsString();
+                String recipeImageURL = recipeData.get("image").getAsString();
+                String recipeSource = recipeData.get("source").getAsString();
+                String recipeSourceURL = recipeData.get("url").getAsString();
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>(){}.getType();
+                ArrayList<String> recipeIngredients = gson.fromJson(recipeData.getAsJsonArray("ingredientLines"), type);
+                Recipe recipe = new Recipe(recipeName, recipeSource, recipeImageURL, recipeSourceURL, recipeIngredients);
+                toReturn.add(recipe);
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return toReturn;
+    }
+
+    private ArrayList<Recipe> getDataFromEdamam(String query, ArrayList<String> included){
+        ArrayList<Recipe> toReturn = new ArrayList<>();
+
+        for(int i = 0; i < included.size(); i++){
+            query = query + " " + included.get(i);
+        }
+
+        try {
+            URL url = new URL(edamamURL + "&q=" + query);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
+            // Convert to a JSON object to print data
+            JsonParser jp = new JsonParser(); //from gson
+            JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
+            JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
+            int count = rootobj.get("count").getAsInt();
+            if(count > 10){
+                count = 10;
             }
             for(int i = 0; i < count; i++){
                 JsonArray hits = rootobj.getAsJsonArray("hits");

@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Sidak Pasricha on 31-Mar-18.
@@ -31,6 +32,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
     private Context context;
     private ArrayList<Recipe> recipes;
+    private HashMap<Integer, Bitmap> images = new HashMap<>();
 
     private ImageView recipeImage;
     private TextView recipeName;
@@ -61,7 +63,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
         final Recipe r = getItem(position);
         if (r != null) {
-            new ImageLoadTask(r.getImageURL(), recipeImage).execute(); //Set Recipe Image
+            new ImageLoadTask(r.getImageURL(), recipeImage, position).execute(); //Set Recipe Image
             recipeName.setText(r.getName());
             recipeSourceName.setText(r.getSource());
             recipeSource.setOnClickListener(new View.OnClickListener() {
@@ -82,23 +84,30 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
         private String url;
         private ImageView imageView;
+        private int position;
 
-        public ImageLoadTask(String url, ImageView imageView) {
+        public ImageLoadTask(String url, ImageView imageView, int position) {
             this.url = url;
             this.imageView = imageView;
+            this.position = position;
         }
 
         @Override
         protected Bitmap doInBackground(Void... params) {
             try {
-                URL urlConnection = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) urlConnection
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
+                if(images.get(position) != null){
+                    return images.get(position);
+                } else {
+                    URL urlConnection = new URL(url);
+                    HttpURLConnection connection = (HttpURLConnection) urlConnection
+                            .openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream input = connection.getInputStream();
+                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                    images.put(position, myBitmap);
+                    return myBitmap;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
