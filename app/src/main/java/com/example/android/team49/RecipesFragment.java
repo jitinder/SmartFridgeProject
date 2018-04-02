@@ -1,6 +1,6 @@
 package com.example.android.team49;
 
-
+//TODO: ADD WHAT TO DO IF RECIPES NOT FOUND VIA SEARCH OR INGREDIENT COMBINATION INVALID
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -141,6 +141,7 @@ public class RecipesFragment extends Fragment {
                         }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                //TODO: ADD PROGRESS DIALOG
                                 recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam("", chosen)));
                                 recipeListView.setVisibility(View.VISIBLE);
                             }
