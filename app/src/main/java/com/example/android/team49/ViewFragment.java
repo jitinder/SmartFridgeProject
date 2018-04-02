@@ -52,7 +52,7 @@ public class ViewFragment extends Fragment {
     private ListView lv;
     private ArrayAdapter<Ingredients> iAdapter;
     private MobileServiceClient msc;
-    private List<Ingredients> results;
+    public static List<Ingredients> results;
     private MobileServiceTable<Ingredients> ingredientsTable;
     public String id;
     private ProgressDialog progressDialog;

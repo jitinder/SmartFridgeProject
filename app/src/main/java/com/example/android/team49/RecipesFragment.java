@@ -67,8 +67,10 @@ public class RecipesFragment extends Fragment {
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
     private ArrayList<Ingredients> results;
-    private List<String> ingredients;
+    private List<String> ingredients = new ArrayList<>();
     private ArrayList<String> chosen;
+
+    private ArrayList recipes = new ArrayList<>();
 
     private ProgressDialog progressRecipe;
     private ProgressDialog progressIngredients;
@@ -92,7 +94,10 @@ public class RecipesFragment extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
         instanceId = InstanceID.getInstance(getContext()).getId();
-        getIngredients(instanceId);
+        //getIngredients(instanceId);
+        for(int i = 0; i < ViewFragment.results.size(); i++){
+            ingredients.add(ViewFragment.results.get(i).getName());
+        }
 
         recipeEdit = (EditText) view.findViewById(R.id.recipe_edit_text);
         searchButton = (Button) view.findViewById(R.id.recipe_search_button);
@@ -103,18 +108,14 @@ public class RecipesFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressRecipe = new ProgressDialog(getContext());
-                progressRecipe.setMessage("Fetching those recipes for you...");
-                progressRecipe.show();
-                //TODO: FIX PROGRESS DIALOG
                 query = recipeEdit.getText().toString();
-                if(!query.equalsIgnoreCase("")){
-                    recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam(query)));
-                    recipeListView.setVisibility(View.VISIBLE);
+               // progressRecipe.show();
+                if (!query.equalsIgnoreCase("")) {
+                    setDataFromEdamam(query);
                 } else {
                     recipeListView.setVisibility(View.INVISIBLE);
                 }
-                progressRecipe.dismiss();
+
             }
         });
 
@@ -141,9 +142,7 @@ public class RecipesFragment extends Fragment {
                         }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                //TODO: ADD PROGRESS DIALOG
-                                recipeListView.setAdapter(new RecipeAdapter(getContext(), getDataFromEdamam("", chosen)));
-                                recipeListView.setVisibility(View.VISIBLE);
+                                getDataFromEdamam(chosen);
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -188,7 +187,7 @@ public class RecipesFragment extends Fragment {
                             public void run() {
                                 ingredients = new ArrayList<>();
                                 for(Ingredients i : results){
-                                    ingredients.add(i.getName());
+                                    //ingredients.add(i.getName());
                                 }
                             }
                         });
@@ -221,80 +220,154 @@ public class RecipesFragment extends Fragment {
         }
     }
 
-    private ArrayList<Recipe> getDataFromEdamam(String query){
-        ArrayList<Recipe> toReturn = new ArrayList<>();
-
-        try {
-            URL url = new URL(edamamURL + "&q=" + query);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
-            // Convert to a JSON object to print data
-            JsonParser jp = new JsonParser(); //from gson
-            JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
-            JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
-            int count = rootobj.get("count").getAsInt();
-            if(count > 10){
-                count = 10;
-            }
-            for(int i = 0; i < count; i++){
-                JsonArray hits = rootobj.getAsJsonArray("hits");
-                JsonObject recipeRoot = hits.get(i).getAsJsonObject();
-                JsonObject recipeData = recipeRoot.get("recipe").getAsJsonObject();
-                String recipeName = recipeData.get("label").getAsString();
-                String recipeImageURL = recipeData.get("image").getAsString();
-                String recipeSource = recipeData.get("source").getAsString();
-                String recipeSourceURL = recipeData.get("url").getAsString();
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<String>>(){}.getType();
-                ArrayList<String> recipeIngredients = gson.fromJson(recipeData.getAsJsonArray("ingredientLines"), type);
-                Recipe recipe = new Recipe(recipeName, recipeSource, recipeImageURL, recipeSourceURL, recipeIngredients);
-                toReturn.add(recipe);
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
+    private AsyncTask<Void, Void, ArrayList<Recipe>> runAsyncTaskForRecipeList(AsyncTask<Void, Void, ArrayList<Recipe>> task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            return task.execute();
         }
-        return toReturn;
     }
 
-    private ArrayList<Recipe> getDataFromEdamam(String query, ArrayList<String> included){
-        ArrayList<Recipe> toReturn = new ArrayList<>();
+    private void setDataFromEdamam(final String query){
+
+        @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, ArrayList<Recipe>> task = new AsyncTask<Void, Void, ArrayList<Recipe>>() {
+
+            private ArrayList<Recipe> toReturn = new ArrayList<>();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressRecipe = new ProgressDialog(getContext());
+                progressRecipe.setMessage("Fetching those recipes for you...");
+                progressRecipe.show();
+            }
+
+            @Override
+            protected ArrayList<Recipe> doInBackground(Void... voids) {
+                try{
+                    URL url = new URL(edamamURL + "&q=" + query);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.connect();
+                    // Convert to a JSON object to print data
+                    JsonParser jp = new JsonParser(); //from gson
+                    JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
+                    JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
+                    int count = rootobj.get("count").getAsInt();
+                    if (count > 10) {
+                        count = 10;
+                    }
+                    for (int i = 0; i < count; i++) {
+                        JsonArray hits = rootobj.getAsJsonArray("hits");
+                        JsonObject recipeRoot = hits.get(i).getAsJsonObject();
+                        JsonObject recipeData = recipeRoot.get("recipe").getAsJsonObject();
+                        String recipeName = recipeData.get("label").getAsString();
+                        String recipeImageURL = recipeData.get("image").getAsString();
+                        String recipeSource = recipeData.get("source").getAsString();
+                        String recipeSourceURL = recipeData.get("url").getAsString();
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<String>>() {
+                        }.getType();
+                        ArrayList<String> recipeIngredients = gson.fromJson(recipeData.getAsJsonArray("ingredientLines"), type);
+                        Recipe recipe = new Recipe(recipeName, recipeSource, recipeImageURL, recipeSourceURL, recipeIngredients);
+                        toReturn.add(recipe);
+                    }
+
+                } catch(
+                        Exception e)
+
+                {
+                    e.printStackTrace();
+                }
+
+                return toReturn;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList toReturn) {
+                super.onPostExecute(toReturn);
+                recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
+                recipeListView.setVisibility(View.VISIBLE);
+                if(progressRecipe.isShowing()){
+                    progressRecipe.dismiss();
+                }
+            }
+        };
+        runAsyncTaskForRecipeList(task);
+    }
+
+
+    private void getDataFromEdamam(ArrayList<String> included){
+        String totalQuery = "";
 
         for(int i = 0; i < included.size(); i++){
-            query = query + " " + included.get(i);
+            totalQuery = totalQuery + included.get(i) + " ";
         }
 
-        try {
-            URL url = new URL(edamamURL + "&q=" + query);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
-            // Convert to a JSON object to print data
-            JsonParser jp = new JsonParser(); //from gson
-            JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
-            JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
-            int count = rootobj.get("count").getAsInt();
-            if(count > 10){
-                count = 10;
-            }
-            for(int i = 0; i < count; i++){
-                JsonArray hits = rootobj.getAsJsonArray("hits");
-                JsonObject recipeRoot = hits.get(i).getAsJsonObject();
-                JsonObject recipeData = recipeRoot.get("recipe").getAsJsonObject();
-                String recipeName = recipeData.get("label").getAsString();
-                String recipeImageURL = recipeData.get("image").getAsString();
-                String recipeSource = recipeData.get("source").getAsString();
-                String recipeSourceURL = recipeData.get("url").getAsString();
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<String>>(){}.getType();
-                ArrayList<String> recipeIngredients = gson.fromJson(recipeData.getAsJsonArray("ingredientLines"), type);
-                Recipe recipe = new Recipe(recipeName, recipeSource, recipeImageURL, recipeSourceURL, recipeIngredients);
-                toReturn.add(recipe);
+        final String query = totalQuery;
+
+        @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, ArrayList<Recipe>> task = new AsyncTask<Void, Void, ArrayList<Recipe>>() {
+
+            private ArrayList<Recipe> toReturn = new ArrayList<>();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressRecipe = new ProgressDialog(getContext());
+                progressRecipe.setMessage("Fetching those recipes for you...");
+                progressRecipe.show();
             }
 
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return toReturn;
+            @Override
+            protected ArrayList<Recipe> doInBackground(Void... voids) {
+                try{
+                    URL url = new URL(edamamURL + "&q=" + query);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.connect();
+                    // Convert to a JSON object to print data
+                    JsonParser jp = new JsonParser(); //from gson
+                    JsonElement root = jp.parse(new InputStreamReader((InputStream) conn.getContent())); //Convert the input stream to a json element
+                    JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
+                    int count = rootobj.get("count").getAsInt();
+                    if (count > 10) {
+                        count = 10;
+                    }
+                    for (int i = 0; i < count; i++) {
+                        JsonArray hits = rootobj.getAsJsonArray("hits");
+                        JsonObject recipeRoot = hits.get(i).getAsJsonObject();
+                        JsonObject recipeData = recipeRoot.get("recipe").getAsJsonObject();
+                        String recipeName = recipeData.get("label").getAsString();
+                        String recipeImageURL = recipeData.get("image").getAsString();
+                        String recipeSource = recipeData.get("source").getAsString();
+                        String recipeSourceURL = recipeData.get("url").getAsString();
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<String>>() {
+                        }.getType();
+                        ArrayList<String> recipeIngredients = gson.fromJson(recipeData.getAsJsonArray("ingredientLines"), type);
+                        Recipe recipe = new Recipe(recipeName, recipeSource, recipeImageURL, recipeSourceURL, recipeIngredients);
+                        toReturn.add(recipe);
+                    }
+
+                } catch(
+                        Exception e)
+
+                {
+                    e.printStackTrace();
+                }
+
+                return toReturn;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList toReturn) {
+                super.onPostExecute(toReturn);
+                recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
+                recipeListView.setVisibility(View.VISIBLE);
+                if(progressRecipe.isShowing()){
+                    progressRecipe.dismiss();
+                }
+            }
+        };
+        runAsyncTaskForRecipeList(task);
     }
 
 }
