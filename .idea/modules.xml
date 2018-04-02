@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/App project.iml" filepath="$PROJECT_DIR$/App project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SmartFridgeProject.iml" filepath="$PROJECT_DIR$/SmartFridgeProject.iml" />
       <module fileurl="file://S:\UCL\COMP 103P - Applied Software Development\App project\SmartFridgeProject.iml" filepath="S:\UCL\COMP 103P - Applied Software Development\App project\SmartFridgeProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
