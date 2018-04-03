@@ -96,8 +96,11 @@ public class RecipesFragment extends Fragment {
         instanceId = InstanceID.getInstance(getContext()).getId();
         //getIngredients(instanceId);
         for(int i = 0; i < ViewFragment.results.size(); i++){
-            ingredients.add(ViewFragment.results.get(i).getName());
+            if(!ingredients.contains(ViewFragment.results.get(i).getName())){
+                ingredients.add(ViewFragment.results.get(i).getName());
+            }
         }
+
 
         recipeEdit = (EditText) view.findViewById(R.id.recipe_edit_text);
         searchButton = (Button) view.findViewById(R.id.recipe_search_button);
@@ -136,13 +139,19 @@ public class RecipesFragment extends Fragment {
                                 }
                                 chosen = new ArrayList<>();
                                 for(int i : selected){
-                                    chosen.add(results.get(i).getName());
+                                    chosen.add(ingredients.get(i));
                                 }
                             }
                         }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                getDataFromEdamam(chosen);
+                                try{
+                                    getDataFromEdamam(chosen);
+                                }
+                                catch(NullPointerException n){
+                                    //
+                                }
+
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
