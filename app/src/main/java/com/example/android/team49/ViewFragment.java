@@ -270,7 +270,12 @@ public class ViewFragment extends Fragment {
                         });
                     } catch (final Exception e) {
                         e.printStackTrace();
-                        viewFlipper.setDisplayedChild(1);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewFlipper.setDisplayedChild(1);
+                            }
+                        });
                     }
                     return null;
                 }
@@ -286,6 +291,14 @@ public class ViewFragment extends Fragment {
             runAsyncTask(task);
         } catch (Exception e) {
 
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 

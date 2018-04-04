@@ -23,19 +23,21 @@
 
         <TextView
             android:id="@+id/ingredient_reload_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/reload_stock"
             android:textColor="@color/colorAccent"
+            android:layout_gravity="center"
             android:gravity="center"
             android:drawableBottom="@drawable/ic_refresh_black_24dp"/>
 
         <TextView
             android:id="@+id/ingredient_empty_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/empty_stock"
             android:textColor="@color/colorAccent"
+            android:layout_gravity="center"
             android:gravity="center"/>
 
 
