@@ -44,10 +44,23 @@
         android:text="@string/pick"
         android:layout_margin="10dp"/>
 
-    <ListView
-        android:id="@+id/recipe_list_view"
+    <ViewFlipper
+        android:id="@+id/recipe_view_flipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/recipe_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/no_recipe_found"/>
+
+    </ViewFlipper>
 
 </LinearLayout>

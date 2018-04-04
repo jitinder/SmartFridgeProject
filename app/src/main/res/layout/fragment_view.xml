@@ -8,12 +8,38 @@
     tools:context="com.example.android.team49.ViewFragment"
     android:background="@color/white">
 
-    <ListView
-        android:id="@+id/lvIngredients"
+    <ViewFlipper
+        android:id="@+id/ingredient_view_flipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:padding="6dp"/>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/lvIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:padding="6dp"/>
+
+
+        <TextView
+            android:id="@+id/ingredient_reload_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/reload_stock"
+            android:textColor="@color/colorAccent"
+            android:gravity="center"
+            android:drawableBottom="@drawable/ic_refresh_black_24dp"/>
+
+        <TextView
+            android:id="@+id/ingredient_empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/empty_stock"
+            android:textColor="@color/colorAccent"
+            android:gravity="center"/>
+
+
+    </ViewFlipper>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -66,5 +66,8 @@
     <string name="ingredients_to_include">Ingredients to Include</string>
     <string name="choose">Choose</string>
     <string name="pick">What Can I Make Now?</string>
+    <string name="no_recipe_found">No Recipe Found :(</string>
+    <string name="reload_stock">There was an error loading your Stock. \n Click here to Reload</string>
+    <string name="empty_stock">Your stock is empty! \n \n Add some items using \"Add New\" to begin</string>
 
 </resources>

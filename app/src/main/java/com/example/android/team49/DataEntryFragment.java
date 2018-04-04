@@ -2,10 +2,12 @@ package com.example.android.team49;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +60,7 @@ public class DataEntryFragment extends Fragment {
     private EditText itemName;
     private ImageView itemImage;
     private NumberPicker numberPicker;
-    int barcodeNumber;
+    private int barcodeNumber = 0;
 
     private Button datePick;
     private DatePickerDialog datePickerDialog;
@@ -79,7 +81,7 @@ public class DataEntryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
+        final View view = inflater.inflate(R.layout.fragment_data_entry, container, false);
 
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
         if (SDK_INT > 8)
@@ -121,20 +123,19 @@ public class DataEntryFragment extends Fragment {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: try catch not entered, barcode number always assigned to be 0
                 try {
                     barcodeNumber = Integer.parseInt(itemBarcode.getText().toString());
-                    System.out.println("+"+barcodeNumber);
                 } catch (NumberFormatException n){
                     barcodeNumber = 0;
                 }
                 String name = itemName.getText().toString();
                 String date = datePick.getText().toString().replace(" ", "");
                 int quantity = numberPicker.getValue();
-                if(name.equals("") || date.equalsIgnoreCase(getString(R.string.pick_a_date)) || date.equals("")){
+                if(name.equals("") || date.equalsIgnoreCase(getString(R.string.pick_a_date).replace(" ", "")) || date.equals("")){
                     Toast.makeText(getContext(), "Please Fill out all required information properly", Toast.LENGTH_SHORT).show();
                 } else {
                     addItemToDB(barcodeNumber, name, date, quantity);
+                    view.clearFocus();
                 }
             }
         });
@@ -172,13 +173,14 @@ public class DataEntryFragment extends Fragment {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                    Toast.makeText(getContext(), "item added!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Item added to Inventory!", Toast.LENGTH_LONG).show();
                                     itemName.setText("");
+                                    datePick.setText(R.string.pick_a_date);
                                     itemBarcode.setText("");
+
                             }
                         });
                     } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
                         e.printStackTrace();
                     }
 
@@ -197,6 +199,8 @@ public class DataEntryFragment extends Fragment {
         } catch (Exception e) {
 
         }
+
+        ViewFragment.results.add(ingredient);
 
     }
 
@@ -219,10 +223,12 @@ public class DataEntryFragment extends Fragment {
         datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month++;
                 String date = dayOfMonth + " / " + month + " / " + year;
                 datePick.setText(date);
             }
         }, year, month, day);
+
         return datePickerDialog;
     }
 
@@ -280,6 +286,25 @@ public class DataEntryFragment extends Fragment {
                 }
 
             } catch (Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Item not found - Please enter data manually");
+                        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
+                        itemName.setText("");
+                        datePick.setText(R.string.pick_a_date);
+                        itemBarcode.setText("");
+
+                    }
+                });
                 e.printStackTrace();
             }
             return null;

@@ -455,6 +455,25 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
             Barcode barcode = graphic.getBarcode();
             barcodes.add(barcode);
         }
+        if(barcodes.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("No barcode found. Return to Manual Input?");
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
+        }
         if(barcodes.size() > 1){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String[] barcodeString = new String[barcodes.size()];
@@ -471,10 +490,14 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
                             finish();
                         }
                     });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-            //Add option to choose which ones to add.
-            Log.d(TAG, "scanBarcode: More than one Barcode Found");
         } else {
             if (barcodes.size() != 0) {
                 Intent data = new Intent();

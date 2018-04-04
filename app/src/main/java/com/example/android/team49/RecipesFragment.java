@@ -1,6 +1,5 @@
 package com.example.android.team49;
 
-//TODO: ADD WHAT TO DO IF RECIPES NOT FOUND VIA SEARCH OR INGREDIENT COMBINATION INVALID
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,6 +20,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -53,8 +55,6 @@ import static com.google.android.gms.internal.zzagz.runOnUiThread;
  * A simple {@link Fragment} subclass.
  */
 public class RecipesFragment extends Fragment {
-
-    //String yummlyURL = "http://api.yummly.com/v1/api/recipes?_app_id=bd3d9a8a&_app_key=aae41863adcb337b442a93c71fb77344";
     String edamamURL = "https://api.edamam.com/search?app_id=2779832b&app_key=13d9b72fcf298caf37cff7668775a2d4";
     private String instanceId;
 
@@ -64,16 +64,12 @@ public class RecipesFragment extends Fragment {
     private ListView recipeListView;
     private String query = "";
 
-    private MobileServiceClient msc;
-    private MobileServiceTable<Ingredients> ingredientsTable;
-    private ArrayList<Ingredients> results;
     private List<String> ingredients = new ArrayList<>();
     private ArrayList<String> chosen;
 
-    private ArrayList recipes = new ArrayList<>();
-
     private ProgressDialog progressRecipe;
-    private ProgressDialog progressIngredients;
+
+    private ViewFlipper viewFlipper;
 
 
     public RecipesFragment() {
@@ -101,6 +97,8 @@ public class RecipesFragment extends Fragment {
             }
         }
 
+        viewFlipper = (ViewFlipper) view.findViewById(R.id.recipe_view_flipper);
+
 
         recipeEdit = (EditText) view.findViewById(R.id.recipe_edit_text);
         searchButton = (Button) view.findViewById(R.id.recipe_search_button);
@@ -117,6 +115,7 @@ public class RecipesFragment extends Fragment {
                     setDataFromEdamam(query);
                 } else {
                     recipeListView.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "Please Enter a valid keyword", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -167,66 +166,6 @@ public class RecipesFragment extends Fragment {
 
 
         return view;
-    }
-
-    private void getIngredients(final String instanceId){
-        try {
-            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
-
-            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    progressIngredients = new ProgressDialog(getContext());
-                    progressIngredients.setMessage("Getting your items... Please Wait");
-                    progressIngredients.show();
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-
-                    try{
-                        results = ingredientsTable.where().field("instanceId").eq(instanceId)
-                                .execute().get();
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ingredients = new ArrayList<>();
-                                for(Ingredients i : results){
-                                    //ingredients.add(i.getName());
-                                }
-                            }
-                        });
-                    } catch (final Exception e) {
-                        //createAndShowDialogFromTask(e, "Error");
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                    if(progressIngredients.isShowing()){
-                        progressIngredients.dismiss();
-                    }
-                }
-            };
-            runAsyncTask(task);
-        } catch (Exception e) {
-
-        }
-    }
-
-    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            return task.execute();
-        }
     }
 
     private AsyncTask<Void, Void, ArrayList<Recipe>> runAsyncTaskForRecipeList(AsyncTask<Void, Void, ArrayList<Recipe>> task) {
@@ -294,8 +233,13 @@ public class RecipesFragment extends Fragment {
             @Override
             protected void onPostExecute(ArrayList toReturn) {
                 super.onPostExecute(toReturn);
-                recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
-                recipeListView.setVisibility(View.VISIBLE);
+                if(toReturn.isEmpty()){
+                    viewFlipper.setDisplayedChild(1);
+                } else {
+                    viewFlipper.setDisplayedChild(0);
+                    recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
+                    recipeListView.setVisibility(View.VISIBLE);
+                }
                 if(progressRecipe.isShowing()){
                     progressRecipe.dismiss();
                 }
@@ -369,8 +313,13 @@ public class RecipesFragment extends Fragment {
             @Override
             protected void onPostExecute(ArrayList toReturn) {
                 super.onPostExecute(toReturn);
-                recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
-                recipeListView.setVisibility(View.VISIBLE);
+                if(toReturn.isEmpty()){
+                    viewFlipper.setDisplayedChild(1);
+                } else {
+                    viewFlipper.setDisplayedChild(0);
+                    recipeListView.setAdapter(new RecipeAdapter(getContext(), toReturn));
+                    recipeListView.setVisibility(View.VISIBLE);
+                }
                 if(progressRecipe.isShowing()){
                     progressRecipe.dismiss();
                 }

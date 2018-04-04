@@ -24,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -59,6 +61,9 @@ public class ViewFragment extends Fragment {
     private FloatingActionButton fab;
     private ArrayList<Ingredients> toSort;
 
+    private ViewFlipper viewFlipper;
+    private TextView reload;
+
     final private int ASCENDING = 1;
     final private int DESCENDING = 2;
 
@@ -85,6 +90,15 @@ public class ViewFragment extends Fragment {
                 sortData();
             }
         });
+
+        reload = (TextView) view.findViewById(R.id.ingredient_reload_list);
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getIngredients(id);
+            }
+        });
+        viewFlipper = (ViewFlipper) view.findViewById(R.id.ingredient_view_flipper);
 
 
         return view;
@@ -245,17 +259,18 @@ public class ViewFragment extends Fragment {
                             public void run() {
 
                                 if(results.size() != 0){
+                                    viewFlipper.setDisplayedChild(0);
                                     iAdapter.addAll(results);
                                 }
                                 else{
-                                    Toast.makeText(getContext(), "add some ingredients!", Toast.LENGTH_LONG).show();
+                                    viewFlipper.setDisplayedChild(2);
                                 }
 
                             }
                         });
                     } catch (final Exception e) {
-                        getIngredients(instanceId);
                         e.printStackTrace();
+                        viewFlipper.setDisplayedChild(1);
                     }
                     return null;
                 }
