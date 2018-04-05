@@ -25,7 +25,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.iid.InstanceID;
@@ -71,6 +73,9 @@ public class DataEntryFragment extends Fragment {
     private MobileServiceClient msc;
     private MobileServiceTable<Ingredients> ingredientsTable;
     private List<Ingredients> results;
+    private TextView reload;
+
+    private ViewFlipper viewFlipper;
 
     public DataEntryFragment() {
         // Required empty public constructor
@@ -91,14 +96,24 @@ public class DataEntryFragment extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
 
+        viewFlipper = (ViewFlipper) view.findViewById(R.id.data_entry_view_flipper);
+        reload = (TextView) view.findViewById(R.id.data_entry_reload);
         itemBarcode = (EditText) view.findViewById(R.id.item_barcode);
         itemName = (EditText) view.findViewById(R.id.item_name);
+        itemName.setText("");
         itemImage = (ImageView) view.findViewById(R.id.item_image);
         numberPicker = (NumberPicker) view.findViewById(R.id.item_quantity);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(10);
 
         addItem = (Button) view.findViewById(R.id.confirm_add_item);
+
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewFlipper.setDisplayedChild(0);
+            }
+        });
 
         //Picking Date
         datePick = (Button) view.findViewById(R.id.item_exp);
@@ -145,7 +160,7 @@ public class DataEntryFragment extends Fragment {
 
     private void addItemToDB(final int barcodeNumber, final String name, String expDate, int quantity) {
         String instanceID = InstanceID.getInstance(getContext()).getId();
-        Ingredients ingredient = new Ingredients(instanceID, name, barcodeNumber, expDate, quantity);
+        final Ingredients ingredient = new Ingredients(instanceID, name, barcodeNumber, expDate, quantity);
         Log.d(TAG, "addItemToDB: "+ingredient.toString());
 
         try {
@@ -153,7 +168,8 @@ public class DataEntryFragment extends Fragment {
             ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
             ingredientsTable.insert(ingredient);
 
-            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
+
 
                 @Override
                 protected void onPreExecute() {
@@ -164,7 +180,7 @@ public class DataEntryFragment extends Fragment {
                 }
 
                 @Override
-                protected Void doInBackground(Void... params) {
+                protected Boolean doInBackground(Void... params) {
 
                     try{
                         results = ingredientsTable.where().field("name").eq(name)
@@ -173,6 +189,7 @@ public class DataEntryFragment extends Fragment {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                viewFlipper.setDisplayedChild(0);
                                     Toast.makeText(getContext(), "Item added to Inventory!", Toast.LENGTH_LONG).show();
                                     itemName.setText("");
                                     datePick.setText(R.string.pick_a_date);
@@ -180,31 +197,39 @@ public class DataEntryFragment extends Fragment {
 
                             }
                         });
-                    } catch (final Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewFlipper.setDisplayedChild(1);
+                            }
+                        });
+                        return false;
                     }
 
-                    return null;
+                    return true;
                 }
 
                 @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
+                protected void onPostExecute(Boolean success) {
+                    super.onPostExecute(success);
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
+                    }
+                    if(ViewFragment.results != null && success) {
+                        ViewFragment.results.add(ingredient);
                     }
                 }
             };
             runAsyncTask(task);
         } catch (Exception e) {
-
+            viewFlipper.setDisplayedChild(1);
         }
-
-        ViewFragment.results.add(ingredient);
 
     }
 
-    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
+    private AsyncTask<Void, Void, Boolean> runAsyncTask(AsyncTask<Void, Void, Boolean> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {

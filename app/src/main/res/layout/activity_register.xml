@@ -71,16 +71,21 @@
                         android:layout_weight="1"
                         android:src="@drawable/ic_person_black_24dp" />
 
-                    <EditText
-                        android:id="@+id/etName"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="14"
-                        android:hint="@string/name"
-                        android:maxLength="25"
-                        android:selectAllOnFocus="false"
-                        android:singleLine="true"
-                        android:textAlignment="center" />
+                        android:layout_weight="4">
+                        <EditText
+                            android:id="@+id/etName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/name"
+                            android:maxLength="25"
+                            android:selectAllOnFocus="false"
+                            android:singleLine="true"
+                            android:textAlignment="center"/>
+                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
 
@@ -99,17 +104,21 @@
                         android:layout_weight="1"
                         android:src="@drawable/ic_vpn_key_black_24dp" />
 
-                    <EditText
-                        android:id="@+id/etPin"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:ems="10"
-                        android:gravity="center"
-                        android:hint="@string/pin"
-                        android:maxLength="4"
-                        android:inputType="numberPassword"
-                        android:singleLine="true" />
+                        android:layout_weight="4">
+                        <EditText
+                            android:id="@+id/etPin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/pin"
+                            android:maxLength="4"
+                            android:inputType="numberPassword"
+                            android:singleLine="true"
+                            android:textAlignment="center" />
+                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
 
@@ -127,17 +136,21 @@
                         android:layout_weight="1"
                         android:src="@drawable/ic_vpn_key_black_24dp" />
 
-                    <EditText
-                        android:id="@+id/etConfirmPin"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:ems="10"
-                        android:gravity="center"
-                        android:hint="@string/confirm"
-                        android:maxLength="4"
-                        android:inputType="numberPassword"
-                        android:singleLine="true" />
+                        android:layout_weight="4">
+                        <EditText
+                            android:id="@+id/etConfirmPin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/confirm"
+                            android:maxLength="4"
+                            android:inputType="numberPassword"
+                            android:singleLine="true"
+                            android:textAlignment="center"/>
+                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
 

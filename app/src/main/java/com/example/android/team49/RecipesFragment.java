@@ -90,20 +90,26 @@ public class RecipesFragment extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
         instanceId = InstanceID.getInstance(getContext()).getId();
-        //getIngredients(instanceId);
-        for(int i = 0; i < ViewFragment.results.size(); i++){
-            if(!ingredients.contains(ViewFragment.results.get(i).getName())){
-                ingredients.add(ViewFragment.results.get(i).getName());
-            }
-        }
-
         viewFlipper = (ViewFlipper) view.findViewById(R.id.recipe_view_flipper);
-
-
         recipeEdit = (EditText) view.findViewById(R.id.recipe_edit_text);
         searchButton = (Button) view.findViewById(R.id.recipe_search_button);
         chooseButton = (Button) view.findViewById(R.id.ingredient_search_button);
         recipeListView = (ListView) view.findViewById(R.id.recipe_list_view);
+        //getIngredients(instanceId);
+        if(ViewFragment.results != null) {
+            chooseButton.setVisibility(View.VISIBLE);
+            for (int i = 0; i < ViewFragment.results.size(); i++) {
+                if (!ingredients.contains(ViewFragment.results.get(i).getName())) {
+                    ingredients.add(ViewFragment.results.get(i).getName());
+                }
+            }
+        } else {
+            chooseButton.setVisibility(View.INVISIBLE);
+        }
+
+
+
+
         recipeListView.setVisibility(View.INVISIBLE);
 
         searchButton.setOnClickListener(new View.OnClickListener() {

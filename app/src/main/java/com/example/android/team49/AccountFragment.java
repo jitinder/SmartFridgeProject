@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.facebook.login.Login;
 import com.google.android.gms.iid.InstanceID;
@@ -29,6 +30,8 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.net.MalformedURLException;
 import java.util.List;
+
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 
 /**
@@ -52,6 +55,8 @@ public class AccountFragment extends Fragment {
 
     private TextView greetingText;
     private TextView pinText; //Secret Place where pin is Stored from async task
+
+    private ViewFlipper viewFlipper;
 
     private SharedPreferences login_state;
 
@@ -79,6 +84,7 @@ public class AccountFragment extends Fragment {
         myRecipesButton = (Button) view.findViewById(R.id.my_recipes_button);
         resetAccountButton = (Button) view.findViewById(R.id.reset_account_button);
         logoutButton = (Button) view.findViewById(R.id.logout_button);
+        viewFlipper = (ViewFlipper) view.findViewById(R.id.account_view_flipper);
 
         login_state = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -231,11 +237,15 @@ public class AccountFragment extends Fragment {
                         if(pinResults.size() != 0) {
                             user = pinResults.get(0);
                             Log.d("Lol", "getUserData: " +user.getName());
-                        } else {
-                            user = new PinAccess("name", 0, "lol");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewFlipper.setDisplayedChild(1);
+                            }
+                        });
                     }
                     return null;
                 }
@@ -243,10 +253,15 @@ public class AccountFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
-                    String greetingString = "Account Settings for " + user.getName();
-                    greetingText.setText(greetingString);
-                    String pin = "" +user.getPin();
-                    pinText.setText(pin);
+                    if(user != null) {
+                        viewFlipper.setDisplayedChild(0);
+                        String greetingString = "Account Settings for " + user.getName();
+                        greetingText.setText(greetingString);
+                        String pin = "" + user.getPin();
+                        pinText.setText(pin);
+                    } else {
+                        viewFlipper.setDisplayedChild(1);
+                    }
                 }
             };
             runAsyncTask(task);
@@ -254,6 +269,8 @@ public class AccountFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+
 
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
