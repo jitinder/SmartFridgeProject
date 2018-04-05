@@ -71,5 +71,6 @@
     <string name="empty_stock">Your stock is empty! \n \n Add some items using \"Add New\" to begin</string>
     <string name="account_error">Account Settings can not be loaded when offline. \n Please connect to the Internet. \n \n Click here to Reload</string>
     <string name="error_data_entry">Items can not be added to Stock when offline. \n Please connect to the Internet. \n \n Click here to Reload</string>
+    <string name="view_ingredients">Ingredients</string>
 
 </resources>

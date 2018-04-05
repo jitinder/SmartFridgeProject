@@ -191,8 +191,10 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.red));
                 }
 
-                holder.quantity.setText("" + (ingredient.getQuantity() - 1));
-                update(ingredient, ingredient.getQuantity() - 1);
+                if(ingredient.getQuantity() - 1 >= 0) {
+                    holder.quantity.setText("" + (ingredient.getQuantity() - 1));
+                    update(ingredient, ingredient.getQuantity() - 1);
+                }
             }
         });
 

@@ -1,13 +1,17 @@
 package com.example.android.team49;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.iid.InstanceID;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import org.w3c.dom.Text;
 
@@ -38,6 +46,12 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
     private TextView recipeName;
     private TextView recipeSourceName;
     private Button recipeSource;
+    private Button recipeIngredients;
+    private ImageView recipeFavourite;
+    private boolean favourited = false;
+
+    private MobileServiceClient msc;
+    private MobileServiceTable<SavedRecipes> savedRecipesTable;
 
     public RecipeAdapter(Context context, ArrayList<Recipe> recipes){
         super(context, R.layout.recipe_list_view, recipes);
@@ -60,6 +74,8 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         recipeName = (TextView) v.findViewById(R.id.recipe_name_view);
         recipeSourceName = (TextView) v.findViewById(R.id.recipe_source_view);
         recipeSource = (Button) v.findViewById(R.id.recipe_website_button);
+        recipeIngredients = (Button) v.findViewById(R.id.recipe_ingredients_button);
+        recipeFavourite = (ImageView) v.findViewById(R.id.recipe_favourite);
 
         final Recipe r = getItem(position);
         if (r != null) {
@@ -75,9 +91,73 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
                     context.startActivity(i);
                 }
             });
+            recipeFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    favourited = !favourited;
+                    if(favourited){
+                        recipeFavourite.setImageResource(R.drawable.ic_star_black_24dp);
+                        //addFavourite(r);
+                    } else {
+                        recipeFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
+                        //removeFavourite(r);
+                    }
+                }
+            });
+            recipeIngredients.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle("Ingredients for: \n" +r.getName());
+                    CharSequence[] ingredients = new CharSequence[r.getIngredients().size()];
+                    for(int i = 0; i < ingredients.length; i++){
+                        ingredients[i] = r.getIngredients().get(i);
+                    }
+                    builder.setItems(ingredients, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
         }
 
         return v;
+    }
+
+    public void addFavourite(Recipe r){
+        // @Venet Change Saved Recipes to store each property of recipe individually. Make this function about storing that value.
+        String instanceID = InstanceID.getInstance(getContext()).getId();
+        Log.d("RecipeAdapter", "addFavourite: "+r.toString());
+
+        try {
+            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
+            savedRecipesTable = msc.getTable("SavedRecipes", SavedRecipes.class);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void removeFavourite(Recipe r){
+        // @Venet Change Saved Recipes to store each property of recipe individually. Make this function about deleting that value.
+        String instanceID = InstanceID.getInstance(getContext()).getId();
+        Log.d("RecipeAdapter", "addFavourite: "+r.toString());
+
+        try {
+            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
+            savedRecipesTable = msc.getTable("SavedRecipes", SavedRecipes.class);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
