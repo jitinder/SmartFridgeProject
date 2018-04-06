@@ -130,7 +130,7 @@ public class RecipesFragment extends Fragment {
         chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ArrayList<Integer> selected = new ArrayList();
+                final ArrayList<Integer> selected = new ArrayList<Integer>();
                 CharSequence[] cs = ingredients.toArray(new CharSequence[ingredients.size()]);
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
                         .setTitle("Choose the ingredients you want to use")

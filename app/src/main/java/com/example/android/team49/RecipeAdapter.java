@@ -1,6 +1,8 @@
 package com.example.android.team49;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -28,9 +31,13 @@ import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 /**
  * Created by Sidak Pasricha on 31-Mar-18.
@@ -50,8 +57,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
     private ImageView recipeFavourite;
     private boolean favourited = false;
 
-    private MobileServiceClient msc;
-    private MobileServiceTable<SavedRecipes> savedRecipesTable;
 
     public RecipeAdapter(Context context, ArrayList<Recipe> recipes){
         super(context, R.layout.recipe_list_view, recipes);
@@ -61,7 +66,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
     @NonNull
     @Override
-    public View getView(int position, final View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
 
         if (v == null) {
@@ -75,7 +80,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         recipeSourceName = (TextView) v.findViewById(R.id.recipe_source_view);
         recipeSource = (Button) v.findViewById(R.id.recipe_website_button);
         recipeIngredients = (Button) v.findViewById(R.id.recipe_ingredients_button);
-        recipeFavourite = (ImageView) v.findViewById(R.id.recipe_favourite);
 
         final Recipe r = getItem(position);
         if (r != null) {
@@ -91,19 +95,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
                     context.startActivity(i);
                 }
             });
-            recipeFavourite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    favourited = !favourited;
-                    if(favourited){
-                        recipeFavourite.setImageResource(R.drawable.ic_star_black_24dp);
-                        //addFavourite(r);
-                    } else {
-                        recipeFavourite.setImageResource(R.drawable.ic_star_border_black_24dp);
-                        //removeFavourite(r);
-                    }
-                }
-            });
+
             recipeIngredients.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,31 +126,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         return v;
     }
 
-    public void addFavourite(Recipe r){
-        // @Venet Change Saved Recipes to store each property of recipe individually. Make this function about storing that value.
-        String instanceID = InstanceID.getInstance(getContext()).getId();
-        Log.d("RecipeAdapter", "addFavourite: "+r.toString());
-
-        try {
-            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            savedRecipesTable = msc.getTable("SavedRecipes", SavedRecipes.class);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void removeFavourite(Recipe r){
-        // @Venet Change Saved Recipes to store each property of recipe individually. Make this function about deleting that value.
-        String instanceID = InstanceID.getInstance(getContext()).getId();
-        Log.d("RecipeAdapter", "addFavourite: "+r.toString());
-
-        try {
-            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            savedRecipesTable = msc.getTable("SavedRecipes", SavedRecipes.class);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
