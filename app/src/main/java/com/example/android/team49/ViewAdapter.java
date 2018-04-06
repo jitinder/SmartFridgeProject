@@ -96,6 +96,13 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         convertView = inflater.inflate(resource, parent, false);
 
+        try {
+            msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
+            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //quantity_str = Integer.toString(q);
 
         holder.name = convertView.findViewById(R.id.tvIngredient);
@@ -168,6 +175,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                                 remove(ingredient);
                                 notifyDataSetChanged();
                                 ingredientsTable.delete(ingredient);
+                                ViewFragment.results.remove(ingredient);
                             } catch (Exception e) {
                                 dialog.dismiss();
                                 e.printStackTrace();
@@ -219,6 +227,40 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 context.startActivity(i);
+            }
+        });
+
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Delete Item");
+                builder.setMessage("Are you sure you want to delete " +ingredient.getName()+ "?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            remove(ingredient);
+                            notifyDataSetChanged();
+                            ingredientsTable.delete(ingredient);
+                            ViewFragment.results.remove(ingredient);
+                        } catch (Exception e) {
+                            dialog.dismiss();
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.red));
+
+                return false;
             }
         });
 
