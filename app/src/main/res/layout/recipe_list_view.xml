@@ -66,14 +66,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/recipe_favourite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_star_border_black_24dp"/>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

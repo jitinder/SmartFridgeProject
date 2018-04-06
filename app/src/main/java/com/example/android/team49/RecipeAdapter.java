@@ -1,8 +1,6 @@
 package com.example.android.team49;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,13 +30,9 @@ import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 /**
  * Created by Sidak Pasricha on 31-Mar-18.
@@ -54,9 +49,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
     private TextView recipeSourceName;
     private Button recipeSource;
     private Button recipeIngredients;
-    private ImageView recipeFavourite;
-    private boolean favourited = false;
-
 
     public RecipeAdapter(Context context, ArrayList<Recipe> recipes){
         super(context, R.layout.recipe_list_view, recipes);
@@ -66,7 +58,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
     @NonNull
     @Override
-    public View getView(final int position, final View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, final View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
 
         if (v == null) {
@@ -75,13 +67,15 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
             v = vi.inflate(R.layout.recipe_list_view, null);
         }
 
+
+        final Recipe r = getItem(position);
+
         recipeImage = (ImageView) v.findViewById(R.id.recipe_image_view);
         recipeName = (TextView) v.findViewById(R.id.recipe_name_view);
         recipeSourceName = (TextView) v.findViewById(R.id.recipe_source_view);
         recipeSource = (Button) v.findViewById(R.id.recipe_website_button);
         recipeIngredients = (Button) v.findViewById(R.id.recipe_ingredients_button);
 
-        final Recipe r = getItem(position);
         if (r != null) {
             new ImageLoadTask(r.getImageURL(), recipeImage, position).execute(); //Set Recipe Image
             recipeName.setText(r.getName());
@@ -95,7 +89,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
                     context.startActivity(i);
                 }
             });
-
             recipeIngredients.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,7 +118,6 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
         return v;
     }
-
 
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 

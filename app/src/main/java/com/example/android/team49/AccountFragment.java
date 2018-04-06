@@ -49,7 +49,6 @@ public class AccountFragment extends Fragment {
     private String instanceId;
 
     private Button changePinButton;
-    private Button myRecipesButton;
     private Button resetAccountButton;
     private Button logoutButton;
 
@@ -81,7 +80,6 @@ public class AccountFragment extends Fragment {
         greetingText = (TextView) view.findViewById(R.id.greeting_view);
         pinText = (TextView) view. findViewById(R.id.pin_view);
         changePinButton = (Button) view.findViewById(R.id.change_pin_button);
-        myRecipesButton = (Button) view.findViewById(R.id.my_recipes_button);
         resetAccountButton = (Button) view.findViewById(R.id.reset_account_button);
         logoutButton = (Button) view.findViewById(R.id.logout_button);
         viewFlipper = (ViewFlipper) view.findViewById(R.id.account_view_flipper);
