@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
@@ -38,6 +40,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private String instanceId;
 
+    private ViewFlipper viewFlipper;
+    private TextView reloadLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginButton = findViewById(R.id.button_login);
         etPassword = findViewById(R.id.etPassword);
         instanceId = InstanceID.getInstance(this).getId();
+        viewFlipper = (ViewFlipper) findViewById(R.id.login_view_flipper);
+        reloadLogin = (TextView) findViewById(R.id.login_error);
+        reloadLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+            }
+        });
 
         registerButton.setOnClickListener(LoginActivity.this);
         loginButton.setOnClickListener(LoginActivity.this);
@@ -64,6 +77,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button_register:
                 register();
+                finish();
                 break;
             case R.id.button_login:
                 String pin = etPassword.getText().toString();
@@ -103,18 +117,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 //mAdapter.clear();
-                                if (results.size() != 0 && results.get(0).getPin().equals(pin)) {
+                                if (results.size() != 0 && isValidAccount(results, pin)) {
                                     home();
                                     SharedPreferences.Editor editor = login_state.edit();
                                     editor.putString("user", "logged");
                                     editor.apply();
+                                    finish();
                                 } else {
                                     signInError();
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        Toast.makeText(LoginActivity.this, "There was an error Signing you in, Please make sure you have registered.", Toast.LENGTH_SHORT).show();
+                        viewFlipper.setDisplayedChild(1);
                         e.printStackTrace();
                     }
                     return null;
@@ -132,6 +147,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         } catch (Exception e) {
             Toast.makeText(this, "There was an error signing you in, Please Try Again", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isValidAccount(List<PinAccess> users, int pin){
+        boolean toReturn = false;
+
+        for(int i = 0; i < users.size(); i++){
+            if(users.get(i).getPin() == pin){
+                toReturn = true;
+            }
+        }
+
+        return toReturn;
     }
 
     private void signInError() {
@@ -167,12 +194,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         } else {
             return task.execute();
         }
-    }
-
-    private void refresh() {
-        Intent refresh = new Intent(LoginActivity.this, LoginActivity.class);
-        startActivity(refresh);
-        finish();
     }
 
     private void home() {

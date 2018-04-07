@@ -72,5 +72,7 @@
     <string name="account_error">Account Settings can not be loaded when offline. \n Please connect to the Internet. \n \n Click here to Reload</string>
     <string name="error_data_entry">Items can not be added to Stock when offline. \n Please connect to the Internet. \n \n Click here to Reload</string>
     <string name="view_ingredients">Ingredients</string>
+    <string name="error_registration">There was a network error while registering your account \n Click here to reload the registration form</string>
+    <string name="error_login">There was a network error while logging you in \n Click here to reload the login form</string>
 
 </resources>

@@ -39,141 +39,162 @@
             android:layout_marginTop="10dp"
             android:layout_weight="0.7">
 
-            <LinearLayout
+            <ViewFlipper
+                android:id="@+id/registration_view_flipper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape"
-                android:orientation="vertical"
                 android:layout_gravity="center">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:text="@string/register"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_person_black_24dp" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4">
-                        <EditText
-                            android:id="@+id/etName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/name"
-                            android:maxLength="25"
-                            android:selectAllOnFocus="false"
-                            android:singleLine="true"
-                            android:textAlignment="center"/>
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_vpn_key_black_24dp" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4">
-                        <EditText
-                            android:id="@+id/etPin"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/pin"
-                            android:maxLength="4"
-                            android:inputType="numberPassword"
-                            android:singleLine="true"
-                            android:textAlignment="center" />
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_vpn_key_black_24dp" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4">
-                        <EditText
-                            android:id="@+id/etConfirmPin"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/confirm"
-                            android:maxLength="4"
-                            android:inputType="numberPassword"
-                            android:singleLine="true"
-                            android:textAlignment="center"/>
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btRegR"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:background="@drawable/shape"
-                    android:text="@string/register_button"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="@string/register"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_person_black_24dp" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4">
+                            <EditText
+                                android:id="@+id/etName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="@string/name"
+                                android:maxLength="25"
+                                android:selectAllOnFocus="false"
+                                android:singleLine="true"
+                                android:textAlignment="center"/>
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_vpn_key_black_24dp" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4">
+                            <EditText
+                                android:id="@+id/etPin"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="@string/pin"
+                                android:maxLength="4"
+                                android:inputType="numberPassword"
+                                android:singleLine="true"
+                                android:textAlignment="center" />
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_vpn_key_black_24dp" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4">
+                            <EditText
+                                android:id="@+id/etConfirmPin"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="@string/confirm"
+                                android:maxLength="4"
+                                android:inputType="numberPassword"
+                                android:singleLine="true"
+                                android:textAlignment="center"/>
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btRegR"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/shape"
+                        android:text="@string/register_button"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/tvRegistered"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="@string/registered"
+                        android:layout_margin="20dp"/>
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvRegistered"
+                    android:id="@+id/registration_error"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_margin="30dp"
+                    android:paddingTop="40dp"
+                    android:paddingBottom="40dp"
                     android:gravity="center"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="@string/registered"
-                    android:layout_margin="20dp"/>
+                    android:background="@drawable/shape"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/error_registration"
+                    android:drawableBottom="@drawable/ic_refresh_black_24dp"/>
 
-            </LinearLayout>
+            </ViewFlipper>
+
 
         </ScrollView>
 

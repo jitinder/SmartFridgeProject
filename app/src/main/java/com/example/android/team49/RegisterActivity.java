@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.iid.InstanceID;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -24,11 +25,15 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceList;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceJsonTable;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
+import org.w3c.dom.Text;
+
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
@@ -38,12 +43,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private EditText etConfirmPin;
     private Button btRegister;
     private TextView tvRegistered;
+    private TextView reloadRegistration;
+    private ViewFlipper viewFlipper;
     private Intent login;
     private MobileServiceClient msc;
     private List<PinAccess> results;
     private ProgressDialog progressDialog;
     private MobileServiceTable<PinAccess> pinTable;
-    private MobileServiceTable<Ingredients> ingredientsTest;
     private String instanceId;
 
     @Override
@@ -59,6 +65,14 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         tvRegistered = findViewById(R.id.tvRegistered);
         tvRegistered.setOnClickListener(RegisterActivity.this);
         instanceId = InstanceID.getInstance(this).getId();
+        viewFlipper = (ViewFlipper) findViewById(R.id.registration_view_flipper);
+        reloadRegistration = (TextView) findViewById(R.id.registration_error);
+        reloadRegistration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+            }
+        });
 
     }
 
@@ -85,7 +99,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public void register(final String name, final Integer pin, final Integer confirm) {
+    public void register(final String name, final int pin, final int confirm) {
         final PinAccess p = new PinAccess(name, pin, instanceId);
 
 
@@ -109,39 +123,43 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                         results = pinTable.where().field("instanceId").
                                 eq(instanceId).execute().get();
 
-                        //Offline Sync
-                        //final List<ToDoItem> results = refreshItemsFromMobileServiceTableSyncTable();
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //mAdapter.clear();
 
                                 if(results.size() == 0){
 
-                                    if(pin.equals(confirm)) {
+                                    if(pin == confirm){
                                         pinTable.insert(p);
                                         Toast.makeText(RegisterActivity.this, "Registered!", Toast.LENGTH_LONG).show();
                                         Intent login = new Intent(RegisterActivity.this, LoginActivity.class);
                                         startActivity(login);
                                         finish();
-                                    }
-
-                                    else{
+                                    } else {
                                         Toast.makeText(RegisterActivity.this, "Ensure pin codes match", Toast.LENGTH_LONG)
                                                 .show();
                                         registerError();
                                     }
 
-                                }
-                                else{
-                                    Toast.makeText(RegisterActivity.this, "Pin taken! Please choose another.", Toast.LENGTH_LONG).show();
+                                } else if(canCreateNewAccount(results, name, pin) && pin == confirm){
+                                    pinTable.insert(p);
+                                    Toast.makeText(RegisterActivity.this, "Registered!", Toast.LENGTH_LONG).show();
+                                    Intent login = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    startActivity(login);
+                                    finish();
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, "Pin or Name already taken on this Device. Please choose Another Value", Toast.LENGTH_LONG).show();
                                     registerError();
                                 }
                             }
                         });
-                    } catch (final Exception e) {
-                        Toast.makeText(RegisterActivity.this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewFlipper.setDisplayedChild(1);
+                            }
+                        });
                         e.printStackTrace();
                     }
 
@@ -157,28 +175,31 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 }
             };
             runAsyncTask(task);
+
         } catch (Exception e) {
-            Toast.makeText(this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "There was an error registering your account, Please Try Again", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+    }
 
-        /*if(password.equals(confirm)) {
-            try {
-                detailsTable.insert(user);
-            } catch (Exception e) {
+    private boolean canCreateNewAccount(List<PinAccess> users, String name, int pin){
+        boolean toReturn = true;
 
+        for(int i = 0; i < users.size(); i++){
+            //Check InstanceID
+            if(users.get(i).getInstanceId().equalsIgnoreCase(instanceId)) {
+                //Check all Names
+                if (users.get(i).getName().equalsIgnoreCase(name)) {
+                    toReturn = false;
+                }
+                //Check all Pins
+                if (users.get(i).getPin() == pin) {
+                    toReturn = false;
+                }
             }
-            login = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(login);
         }
-        else{
-            Toast.makeText(this, "Please check passwords match", Toast.LENGTH_SHORT).show();
-            Intent reload = new Intent(RegisterActivity.this, RegisterActivity.class);
-            startActivity(reload);
-        }*/
 
-        //Robs code
-
+        return toReturn;
     }
 
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
@@ -190,8 +211,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     }
 
     private void registerError() {
-        //refresh();
-        //finish();
         etName.setText("");
         etPin.setText("");
         etConfirmPin.setText("");
