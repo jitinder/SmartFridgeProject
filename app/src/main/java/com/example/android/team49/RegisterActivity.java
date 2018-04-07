@@ -148,7 +148,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                                     startActivity(login);
                                     finish();
                                 } else {
-                                    Toast.makeText(RegisterActivity.this, "Pin or Name already taken on this Device. Please choose Another Value", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterActivity.this, "This device has already been registered!", Toast.LENGTH_LONG).show();
                                     registerError();
                                 }
                             }
