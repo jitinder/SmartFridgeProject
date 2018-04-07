@@ -253,7 +253,7 @@ public class AccountFragment extends Fragment {
                     super.onPostExecute(aVoid);
                     if(user != null) {
                         viewFlipper.setDisplayedChild(0);
-                        String greetingString = "Account Settings for " + user.getName();
+                        String greetingString = "Account Settings";
                         greetingText.setText(greetingString);
                         String pin = "" + user.getPin();
                         pinText.setText(pin);
