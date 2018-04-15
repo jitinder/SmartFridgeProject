@@ -3,6 +3,7 @@ package com.example.android.team49;
 import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +28,10 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
+    private int fragmentNumber = 1; // 0 = Data Entry | 1 = Stock | 2 = Recipes
+    final DataEntryFragment dataEntryFragment = new DataEntryFragment();
+    final ViewFragment viewFragment = new ViewFragment();
+    final RecipesFragment recipesFragment = new RecipesFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +41,6 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.app_toolbar);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-
-        //disableShiftMode(bottomNavigationView);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -54,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentTransaction.replace(frameLayout.getId(), accountFragment);
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
+                            fragmentNumber = 4;
                         }
 
                         final Menu menu = bottomNavigationView.getMenu();
@@ -67,9 +71,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-        final DataEntryFragment dataEntryFragment = new DataEntryFragment();
-        final ViewFragment viewFragment = new ViewFragment();
-        final RecipesFragment recipesFragment = new RecipesFragment();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
+                        fragmentNumber = 0;
                         break;
 
                     case R.id.stock_action:
@@ -94,6 +96,7 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
+                        fragmentNumber = 1;
                         break;
 
                     case R.id.recipes_action:
@@ -102,34 +105,49 @@ public class HomeActivity extends AppCompatActivity {
                             fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
                         }
+                        fragmentNumber = 2;
                         break;
                 }
                 return true;
             }
         });
 
-        bottomNavigationView.setSelectedItemId(R.id.stock_action);
+        if(savedInstanceState != null){
+            bottomNavigationView.setSelectedItemId(savedInstanceState.getInt("CURRENT_FRAGMENT", R.id.stock_action));
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.stock_action);
+        }
+
     }
 
-    // Method for disabling ShiftMode of BottomNavigationView
-    @SuppressLint("RestrictedApi")
-    private void disableShiftMode(BottomNavigationView view) {
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
-        try {
-            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuView, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuView.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-                item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("BNVHelper", "Unable to get shift mode field", e);
-        } catch (IllegalAccessException e) {
-            Log.e("BNVHelper", "Unable to change value of shift mode", e);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(fragmentNumber < 4) {
+            outState.putInt("CURRENT_FRAGMENT", bottomNavigationView.getSelectedItemId());
+        } else {
+            outState.putInt("CURRENT_FRAGMENT", R.id.account_action);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        switch(fragmentNumber){
+            case 0:
+                bottomNavigationView.setSelectedItemId(R.id.item_action);
+                break;
+            case 1:
+                bottomNavigationView.setSelectedItemId(R.id.stock_action);
+                break;
+            case 2:
+                bottomNavigationView.setSelectedItemId(R.id.recipes_action);
+                break;
+            case 4:
+                final Menu menu = bottomNavigationView.getMenu();
+                for(int i = 0; i < menu.size(); i++) {
+                    menu.getItem(i).setCheckable(false);
+                }
+                break;
         }
     }
 
