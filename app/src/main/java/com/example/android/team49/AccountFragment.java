@@ -232,8 +232,6 @@ public class AccountFragment extends Fragment {
                         ingResults = ingredientsTable.where().field("instanceId").
                                 eq(instanceId).execute().get();
 
-                        //TODO: GET RECIPES SAVED
-
                         if(pinResults.size() != 0) {
                             user = pinResults.get(0);
                             Log.d("Lol", "getUserData: " +user.getName());

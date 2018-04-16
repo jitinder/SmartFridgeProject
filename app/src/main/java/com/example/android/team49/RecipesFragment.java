@@ -98,6 +98,7 @@ public class RecipesFragment extends Fragment {
         chooseButton = (Button) view.findViewById(R.id.ingredient_search_button);
         recipeListView = (ListView) view.findViewById(R.id.recipe_list_view);
         //getIngredients(instanceId);
+        ingredients.clear();
         if(ViewFragment.results != null) {
             chooseButton.setVisibility(View.VISIBLE);
             for (int i = 0; i < ViewFragment.results.size(); i++) {

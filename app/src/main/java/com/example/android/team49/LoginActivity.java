@@ -75,7 +75,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginButton.setOnClickListener(LoginActivity.this);
 
         login_state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //TODO:REMEMBER TO ADD BACK AFTER DONE TESTING
         String state = login_state.getString("user", "");
         if(!state.equalsIgnoreCase("")){
             home();
