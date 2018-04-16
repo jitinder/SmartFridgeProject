@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -68,6 +69,7 @@ public class RecipesFragment extends Fragment {
     private ArrayList<String> chosen;
 
     private ProgressDialog progressRecipe;
+    private ArrayList<Recipe> toReturn = new ArrayList<>();
 
     private ViewFlipper viewFlipper;
 
@@ -107,10 +109,12 @@ public class RecipesFragment extends Fragment {
             chooseButton.setVisibility(View.INVISIBLE);
         }
 
-
-
-
-        recipeListView.setVisibility(View.INVISIBLE);
+        if(savedInstanceState == null) {
+            recipeListView.setVisibility(View.INVISIBLE);
+        } else {
+            recipeListView.setVisibility(View.VISIBLE);
+            recipeListView.setAdapter(new RecipeAdapter(getContext(), (ArrayList<Recipe>) savedInstanceState.getSerializable("Recipes_list")));
+        }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,46 +136,60 @@ public class RecipesFragment extends Fragment {
             public void onClick(View v) {
                 final ArrayList<Integer> selected = new ArrayList<Integer>();
                 CharSequence[] cs = ingredients.toArray(new CharSequence[ingredients.size()]);
-                AlertDialog dialog = new AlertDialog.Builder(getContext())
-                        .setTitle("Choose the ingredients you want to use")
-                        .setMultiChoiceItems(cs, null, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
-                                if (isChecked) {
-                                    selected.add(indexSelected);
-                                } else if (selected.contains(indexSelected)) {
-                                    selected.remove(indexSelected);
+                if (cs.length != 0) {
+                    AlertDialog dialog = new AlertDialog.Builder(getContext())
+                            .setTitle("Choose the ingredients you want to use")
+                            .setMultiChoiceItems(cs, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                                    if (isChecked) {
+                                        selected.add(indexSelected);
+                                    } else if (selected.contains(indexSelected)) {
+                                        selected.remove(indexSelected);
+                                    }
+                                    chosen = new ArrayList<>();
+                                    for (int i : selected) {
+                                        chosen.add(ingredients.get(i));
+                                    }
                                 }
-                                chosen = new ArrayList<>();
-                                for(int i : selected){
-                                    chosen.add(ingredients.get(i));
+                            }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    try {
+                                        getDataFromEdamam(chosen);
+                                    } catch (NullPointerException n) {
+                                        //
+                                    }
+
                                 }
-                            }
-                        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                try{
-                                    getDataFromEdamam(chosen);
-                                }
-                                catch(NullPointerException n){
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
                                     //
                                 }
+                            }).create();
+                    dialog.show();
+                } else {
+                    AlertDialog dialog = new AlertDialog.Builder(getContext())
+                            .setTitle("No Ingredients Found")
+                            .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                //
-                            }
-                        }).create();
-                dialog.show();
+                                }
+                            }).create();
+                    dialog.show();
+                }
             }
         });
 
-
-
-
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Recipes_list", toReturn);
     }
 
     private AsyncTask<Void, Void, ArrayList<Recipe>> runAsyncTaskForRecipeList(AsyncTask<Void, Void, ArrayList<Recipe>> task) {
@@ -185,8 +203,6 @@ public class RecipesFragment extends Fragment {
     private void setDataFromEdamam(final String query){
 
         @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, ArrayList<Recipe>> task = new AsyncTask<Void, Void, ArrayList<Recipe>>() {
-
-            private ArrayList<Recipe> toReturn = new ArrayList<>();
 
             @Override
             protected void onPreExecute() {

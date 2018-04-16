@@ -25,7 +25,9 @@
                 android:hint="@string/recipe_name"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="10dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:maxLines="1"
+                android:inputType="text"/>
 
         </android.support.design.widget.TextInputLayout>
 

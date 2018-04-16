@@ -74,5 +74,6 @@
     <string name="view_ingredients">Ingredients</string>
     <string name="error_registration">There was a network error while registering your account \n Click here to reload the registration form</string>
     <string name="error_login">There was a network error while logging you in \n Click here to reload the login form</string>
+    <string name="error_login_no_account">No account was found registered from this device \n Click here to reload the login form and Register</string>
 
 </resources>

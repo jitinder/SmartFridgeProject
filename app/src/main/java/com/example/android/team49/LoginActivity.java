@@ -23,6 +23,8 @@ import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 
@@ -42,6 +44,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private ViewFlipper viewFlipper;
     private TextView reloadLogin;
+    private TextView reloadLogin2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         viewFlipper = (ViewFlipper) findViewById(R.id.login_view_flipper);
         reloadLogin = (TextView) findViewById(R.id.login_error);
         reloadLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+            }
+        });
+        reloadLogin2 = (TextView) findViewById(R.id.login_error_no_account);
+        reloadLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recreate();
@@ -124,6 +134,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     editor.apply();
                                     finish();
                                 } else {
+                                    viewFlipper.setDisplayedChild(2);
                                     signInError();
                                 }
                             }

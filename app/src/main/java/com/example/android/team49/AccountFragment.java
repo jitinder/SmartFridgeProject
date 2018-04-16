@@ -168,8 +168,10 @@ public class AccountFragment extends Fragment {
                 try {
                     for(Ingredients userIngs : ingResults){
                         ingredientsTable.delete(userIngs);
+                        if(!ViewFragment.results.isEmpty()) {
+                            ViewFragment.results.clear();
+                        }
                     }
-                    //TODO: DELETE SAVED RECIPES
                     Toast.makeText(getContext(), "account reset.", Toast.LENGTH_LONG).show();
                 } catch (Exception e){
                     dialog.dismiss();

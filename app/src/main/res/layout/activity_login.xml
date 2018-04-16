@@ -33,16 +33,16 @@
             android:layout_weight="0.15"/>
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center">
 
             <ViewFlipper
                 android:id="@+id/login_view_flipper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,6 +126,19 @@
                     android:background="@drawable/shape"
                     android:textColor="@color/colorAccent"
                     android:text="@string/error_login"
+                    android:drawableBottom="@drawable/ic_refresh_black_24dp"/>
+
+                <TextView
+                    android:id="@+id/login_error_no_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="30dp"
+                    android:paddingTop="40dp"
+                    android:paddingBottom="40dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape"
+                    android:textColor="@color/colorAccent"
+                    android:text="@string/error_login_no_account"
                     android:drawableBottom="@drawable/ic_refresh_black_24dp"/>
 
             </ViewFlipper>
