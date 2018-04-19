@@ -3,8 +3,6 @@ package com.example.android.team49;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Application;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.facebook.login.Login;
 import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
@@ -35,7 +31,10 @@ import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} that is shown when the user clicks on the "Account" button/icon on {@link HomeActivity}.
+ * Allows basic account data Manipulation or Logging out.
+ *
+ * @author     Abdirahman Mohamed, Sidak Pasricha
  */
 public class AccountFragment extends Fragment {
 
@@ -109,6 +108,9 @@ public class AccountFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Shows the Dialog for Changing User's Pin
+     */
     private void showChangePin(){
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.change_pin_layout, null);
@@ -151,6 +153,9 @@ public class AccountFragment extends Fragment {
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
     }
 
+    /**
+     * Shows the Dialog for Resetting User's Password
+     */
     private void showConfirmReset(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Reset Account");
@@ -186,6 +191,9 @@ public class AccountFragment extends Fragment {
 
     }
 
+    /**
+     * Logs out the user
+     */
     private void logout(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("Logout");
@@ -220,6 +228,9 @@ public class AccountFragment extends Fragment {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.red));
     }
 
+    /**
+     * Fetches the logged in User's Data based on the InstanceID
+     */
     private void getUserData(){
         try{
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -236,7 +247,6 @@ public class AccountFragment extends Fragment {
 
                         if(pinResults.size() != 0) {
                             user = pinResults.get(0);
-                            Log.d("Lol", "getUserData: " +user.getName());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -48,7 +48,9 @@ import java.util.concurrent.ExecutionException;
 import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 /**
- * Created by venet on 23/03/2018.
+ * Custom Adapter to load Stock data in the {@link ViewFragment} ListView
+ *
+ * @author          Abdirahman Mohamed, Sidak Pasricha, Venet Kukran
  */
 
 public class ViewAdapter extends ArrayAdapter<Ingredients> {
@@ -268,6 +270,11 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     }
 
 
+    /**
+     * Updates the Values of the stock items in the Database
+     * @param ingredient            Ingredient being updated
+     * @param quantity              New quantity of this object to be updated
+     */
     private void update(final Ingredients ingredient, final int quantity) {
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
@@ -306,6 +313,12 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         }
     }
 
+    /**
+     * Used to create a Notification for Stock Reminders
+     * @param content           The Content to put in the Notification
+     * @param title             The Title of the Notification
+     * @return                  The Notification with Reminder for Stock
+     */
     private Notification getNotification(String content, String title) {
         Notification.Builder builder = new Notification.Builder(getContext());
         builder.setContentTitle(title);
@@ -314,6 +327,11 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
         return builder.build();
     }
 
+    /**
+     * Used to set the delay in the Notification created
+     * @param notification      The Notification to schedule
+     * @param delay             The time after which the Notification should be shown
+     */
     private void scheduleNotification(Notification notification, int delay) {
 
         Intent notificationIntent = new Intent(getContext(), Notifications.class);

@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Created by venet on 30/03/2018.
+ * Used to Handle notifications in the App.
+ *
+ * @author      Venet Kukran
  */
 
 public class Notifications extends BroadcastReceiver {

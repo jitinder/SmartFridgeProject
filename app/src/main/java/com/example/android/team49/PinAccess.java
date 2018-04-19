@@ -1,7 +1,9 @@
 package com.example.android.team49;
 
 /**
- * Created by venet on 20/03/2018.
+ * Class used to Represent the Account details of an individiual
+ *
+ * @authors         Abdirahman Mohamed, Venet Kukran
  */
 
 

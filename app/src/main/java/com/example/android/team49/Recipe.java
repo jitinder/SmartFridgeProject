@@ -2,6 +2,12 @@ package com.example.android.team49;
 
 import java.util.ArrayList;
 
+/**
+ * Class used to represent the details of a Recipe
+ *
+ * @author      Sidak Pasricha
+ */
+
 public class Recipe {
 
     String name;
