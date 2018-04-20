@@ -31,7 +31,8 @@
                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanActivity" />
+        <activity android:name=".ScanActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".HomeActivity"
             android:label="Smart Fridge Home">
         </activity>

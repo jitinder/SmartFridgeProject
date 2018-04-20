@@ -1,8 +1,8 @@
 package com.example.android.team49;
 
-import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,24 +12,17 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.team49.ui.camera.CameraSource;
@@ -38,7 +31,6 @@ import com.example.android.team49.ui.camera.GraphicOverlay;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
@@ -46,6 +38,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * The {@link Activity} that allows the user to scan a barcode off an object.
+ * It returns the barcode data if successful to the calling Activity/Fragment. In this case {@link DataEntryFragment}.
+ *
+ * @author              Sidak Pasricha
+ */
 public final class ScanActivity extends AppCompatActivity implements BarcodeGraphicTracker.BarcodeUpdateListener{
 
     private static final String TAG = "Scan Activity:";
@@ -148,6 +146,10 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
+    /**
+     * Called when the Flash ImageView {@link #flashImageView} is clicked.
+     * Handles the state of Flash used with the Camera when the View is clicked.
+     */
     private void toggleFlash(){
         int cameraSide = mCameraSource.getCameraFacing();
         if(mCameraSource != null) {
@@ -166,6 +168,10 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
         Log.d(TAG, "toggleFlash: " + useFlash);
     }
 
+    /**
+     * Called when the Toggle Camera ImageView {@link #cameraSideImageView} is clicked.
+     * Flips the Camera when the View is clicked.
+     */
     private void toggleCamera(int newCameraSide){
         if(mCameraSource != null) {
             mCameraSource.release();
@@ -450,6 +456,11 @@ public final class ScanActivity extends AppCompatActivity implements BarcodeGrap
         }
     }
 
+    /**
+     * Stores all visible {@link Barcode} Objects in an ArrayList.
+     * If there is more than one detected, a dialog is displayed to choose one.
+     * If there is only one/ one is selected, that barcode is sent to the {@link DataEntryFragment} for use with the API.
+     */
     private void scanBarcode(){
         for (BarcodeGraphic graphic : mGraphicOverlay.getGraphics()) {
             Barcode barcode = graphic.getBarcode();

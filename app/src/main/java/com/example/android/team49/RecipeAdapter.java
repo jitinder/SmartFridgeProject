@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Sidak Pasricha on 31-Mar-18.
+ * Custom Adapter to Load Recipes in the {@link RecipesFragment} ListView
+ *
+ * @author          Sidak Pasricha
  */
 
 public class RecipeAdapter extends ArrayAdapter<Recipe> {
@@ -119,6 +121,9 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         return v;
     }
 
+    /**
+     * Used to Load image for the Card
+     */
     public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
         private String url;

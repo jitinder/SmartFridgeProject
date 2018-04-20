@@ -3,14 +3,12 @@ package com.example.android.team49;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,12 +21,15 @@ import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
+/**
+ * The {@link Activity} that displays the form to allow logging in to the application
+ *
+ * @authors     Abdirahman Mohamed, Sidak Pasricha, Venet Kukran
+ */
 
-public class LoginActivity extends Activity implements View.OnClickListener {
+public class LoginActivity extends Activity{
 
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "LOGIN_ACTIVITY";
@@ -50,7 +51,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Build a GoogleSignInClient with the options specified by gso.
         registerButton = findViewById(R.id.button_register);
         loginButton = findViewById(R.id.button_login);
         etPassword = findViewById(R.id.etPassword);
@@ -71,8 +71,25 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         });
 
-        registerButton.setOnClickListener(LoginActivity.this);
-        loginButton.setOnClickListener(LoginActivity.this);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                register();
+                finish();
+            }
+        });
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pin = etPassword.getText().toString();
+                if (pin.equals("")) {
+                    signInError();
+                } else {
+                    int finalPin = Integer.parseInt(pin);
+                    login(finalPin, instanceId);//pin input;
+                }
+            }
+        });
 
         login_state = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String state = login_state.getString("user", "");
@@ -81,25 +98,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_register:
-                register();
-                finish();
-                break;
-            case R.id.button_login:
-                String pin = etPassword.getText().toString();
-                if (pin.equals("")) {
-                    signInError();
-                } else {
-                    int finalPin = Integer.parseInt(pin);
-                    login(finalPin, instanceId);//pin input;
-                }
-                break;
-        }
-    }
 
+    /**
+     * Logs in the User based on the InstanceID and Pin input into the form
+     * @param pin               The Entered Pin
+     * @param instanceId        The InstanceID
+     */
     private void login(final int pin, final String instanceId) {
 
         try {
@@ -159,6 +163,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Checks if the entered Pin matches any user's pin from the same InstanceID
+     * @param users     List of UserData to be checked
+     * @param pin       Entered Pin
+     * @return          True if valid account | False if invalid
+     */
     private boolean isValidAccount(List<PinAccess> users, int pin){
         boolean toReturn = false;
 
@@ -171,10 +181,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         return toReturn;
     }
 
+    /**
+     * Handles errors in Signing In the User
+     */
     private void signInError() {
         Toast.makeText(LoginActivity.this, "Pin incorrect!", Toast.LENGTH_LONG).show();
-        //refresh();
-        //finish();
         etPassword.setText("");
         LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root_layout);
         rootLayout.clearFocus();
@@ -193,6 +204,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Opens {@link RegisterActivity}
+     */
     private void register() {
         Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(register);
@@ -206,18 +220,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Opens {@link HomeActivity}
+     */
     private void home() {
         Intent logged = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(logged);
         finish();
-    }
-
-    public void setLoginState(SharedPreferences login_state, String state){
-        login_state.edit().putBoolean("state", true).apply();
-        this.login_state = login_state;
-    }
-
-    public SharedPreferences getLoginState(){
-        return this.login_state;
     }
 }

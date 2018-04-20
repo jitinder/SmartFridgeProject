@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +38,6 @@ import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
@@ -50,7 +47,11 @@ import static com.google.android.gms.internal.zzagz.runOnUiThread;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} that is shown when the "Add New" option is chosen on the {@link HomeActivity} BottomNavigationView.
+ * Shows a form to add a new item to the "Stock" of the user(InstanceID based).
+ *
+ * @authors     Abdirahman Mohamed, Sidak Pasricha, Venet Kukran
+ *
  */
 public class DataEntryFragment extends Fragment {
 
@@ -158,10 +159,17 @@ public class DataEntryFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Used to add an item to the online Database for the User's Stock
+     *
+     * @param barcodeNumber     The item's barcode number
+     * @param name              The item's name
+     * @param expDate           The item's Expiry Date
+     * @param quantity          The item's quantity
+     */
     private void addItemToDB(final int barcodeNumber, final String name, String expDate, int quantity) {
         String instanceID = InstanceID.getInstance(getContext()).getId();
         final Ingredients ingredient = new Ingredients(instanceID, name, barcodeNumber, expDate, quantity);
-        Log.d(TAG, "addItemToDB: "+ingredient.toString());
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
@@ -237,6 +245,11 @@ public class DataEntryFragment extends Fragment {
         }
     }
 
+    /**
+     * Used to create and return a DatePickerDialog for selecting Expiry date of the Item
+     *
+     * @return      The DatePickerDialog to be shown
+     */
     public Dialog getDatePicker() {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
@@ -257,7 +270,9 @@ public class DataEntryFragment extends Fragment {
         return datePickerDialog;
     }
 
-    /**Asynchronous Task to Handle API Call **/
+    /**
+     * Asynchronous Tasks to Handle API Call
+     */
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -273,7 +288,6 @@ public class DataEntryFragment extends Fragment {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
             return mIcon11;
@@ -303,7 +317,6 @@ public class DataEntryFragment extends Fragment {
 
                 if(product.get("image_front_small_url") != null) {
                     String productImageLink = product.get("image_front_small_url").toString().replace("\"", "");
-                    Log.d(TAG, "Name read: " + productName + " image URL : " + productImageLink);
                     new DownloadImageTask((ImageView) getView().findViewById(R.id.item_image))
                             .execute(productImageLink);
                 } else {
@@ -353,12 +366,10 @@ public class DataEntryFragment extends Fragment {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(ScanActivity.BarcodeObject);
                     barcodeValue = barcode.displayValue;
-                    Log.d(TAG, "Barcode read: " + barcodeValue);
                     new setDataFromAPI().doInBackground();
                 } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
+                    // No Barcode Captured
                 }
-            } else {
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

@@ -1,19 +1,14 @@
 package com.example.android.team49;
 
 /**
- * Created by venet on 12/03/2018.
+ * Class for Ingredients stored in the Azure Easy Table
+ *
+ * @authors      Sidak Pasricha, Venet Kukran
  */
-
-import android.annotation.SuppressLint;
 
 import com.microsoft.windowsazure.mobileservices.table.DateTimeOffset;
 
-import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
 
 
 public class Ingredients {
@@ -93,6 +88,9 @@ public class Ingredients {
         this.quantity = quantity;
     }
 
+    /**
+     * Compares 2 Ingredients' names and returns them in Ascending order
+     */
     public static Comparator<Ingredients> compareNameAscending = new Comparator<Ingredients>() {
         @Override
         public int compare(Ingredients o1, Ingredients o2) {
@@ -103,6 +101,9 @@ public class Ingredients {
         }
     };
 
+    /**
+     * Compares 2 Ingredients' names and returns them in Descending order
+     */
     public static Comparator<Ingredients> compareNameDescending = new Comparator<Ingredients>() {
         @Override
         public int compare(Ingredients o1, Ingredients o2) {
@@ -113,6 +114,9 @@ public class Ingredients {
         }
     };
 
+    /**
+     * Compares 2 Ingredients' quantities and returns them in Ascending order
+     */
     public static Comparator<Ingredients> compareQuantityAscending = new Comparator<Ingredients>() {
         @Override
         public int compare(Ingredients o1, Ingredients o2) {
@@ -123,6 +127,9 @@ public class Ingredients {
         }
     };
 
+    /**
+     * Compares 2 Ingredients' quantities and returns them in Descending order
+     */
     public static Comparator<Ingredients> compareQuantityDescending = new Comparator<Ingredients>() {
         @Override
         public int compare(Ingredients o1, Ingredients o2) {
@@ -133,6 +140,11 @@ public class Ingredients {
         }
     };
 
+    /**
+     * Return a String representation of the Object Ingredients
+     *
+     * @return      The String representation of this object
+     */
     @Override
     public String toString() {
         return "Name: " +name+ " Barcode: " +barcodeNumber+ " Exp: " +expDate+ " Quantity: " +quantity+ " to InstanceID: " +instanceID;

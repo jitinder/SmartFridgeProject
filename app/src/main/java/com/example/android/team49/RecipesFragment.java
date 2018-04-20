@@ -3,16 +3,12 @@ package com.example.android.team49;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import android.widget.ViewSwitcher;
 
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -32,28 +26,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.internal.zzagz.runOnUiThread;
-
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} that allows searching for Recipes and displays them in a List of CardViews.
+ * @authors         Abdirahman Mohamed, Venet Kukran
  */
 public class RecipesFragment extends Fragment {
     String edamamURL = "https://api.edamam.com/search?app_id=2779832b&app_key=13d9b72fcf298caf37cff7668775a2d4";
@@ -201,6 +186,10 @@ public class RecipesFragment extends Fragment {
         }
     }
 
+    /**
+     * Fetches data from the API from the "Search By Name" and displays it in the ListView
+     * @param query         The Query passed to the API
+     */
     private void setDataFromEdamam(final String query){
 
         @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, ArrayList<Recipe>> task = new AsyncTask<Void, Void, ArrayList<Recipe>>() {
@@ -271,7 +260,10 @@ public class RecipesFragment extends Fragment {
         runAsyncTaskForRecipeList(task);
     }
 
-
+    /**
+     * Fetches data from the API from the List of Ingredients and displays it in the ListView
+     * @param included         The list of Ingredient Names selected by the user.
+     */
     private void getDataFromEdamam(ArrayList<String> included){
         String totalQuery = "";
 

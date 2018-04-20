@@ -47,7 +47,9 @@ import static com.microsoft.windowsazure.mobileservices.table.query.QueryOperati
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} that contains the ListView with the User's stock.
+ *
+ * @authors         Sidak Pasricha, Venet Kukran
  */
 public class ViewFragment extends Fragment {
 
@@ -104,6 +106,11 @@ public class ViewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Shows a dialog with Sorting Options
+     * Sorts the Data according to the preference of the user
+     * Updates the order of display in the ListView accordingly
+     */
     private void sortData(){
         toSort = new ArrayList<>();
         for(int i = 0; i < iAdapter.getCount(); i++){
@@ -152,6 +159,12 @@ public class ViewFragment extends Fragment {
         alert.show();
     }
 
+    /**
+     * Takes an ArrayList of Ingredients and sorts it in either Ascending or Descending order of Date
+     * @param arrayList         ArrayList of Ingredients to sort
+     * @param mode              The chosen mode of sorting. Either {@link #ASCENDING} or {@link #DESCENDING}
+     * @return                  The ArrayList of Ingredients sorted by Date
+     */
     @SuppressLint("SimpleDateFormat")
     private ArrayList<Ingredients> sortByDate(ArrayList<Ingredients> arrayList, int mode){
         ArrayList<Ingredients> sorted = new ArrayList<>();
@@ -192,13 +205,16 @@ public class ViewFragment extends Fragment {
             sorted.add(arrayList.get(order[i]));
         }
 
-        for(int j = 0; j < sorted.size(); j++) {
-            System.out.println(sorted.get(j).toString());
-        }
-
         return sorted;
     }
 
+    /**
+     * Compares two Dates according to the Chosen order and returns an appropriate answer
+     * @param a         Date values of the first Ingredient in Array of 3 Integers format: {DD, MM, YYYY}
+     * @param b         Date values of the second Ingredient in Array of 3 Integers format: {DD, MM, YYYY}
+     * @param mode      Mode to compare them with. Either {@link #ASCENDING} or {@link #DESCENDING}
+     * @return          Value for determining which date is appropriate. 0 if both are equal | 1 if A satisfies | 2 if B satisfies
+     */
     private int compareDates(int[] a, int[] b, int mode){
         int toReturn = 0; // Both Equal
         //1 = a best, 2 = b best
@@ -232,6 +248,11 @@ public class ViewFragment extends Fragment {
         return toReturn;
     }
 
+    /**
+     * Fetches the stock for the user based on the InstanceID so that the whole inventory is shown
+     * Sets this stock in the ListView
+     * @param instanceId            InstanceID of the app
+     */
     private void getIngredients(final String instanceId){
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());

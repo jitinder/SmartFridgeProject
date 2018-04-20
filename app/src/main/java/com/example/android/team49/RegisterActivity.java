@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,24 +16,16 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.iid.InstanceID;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.MobileServiceList;
-import com.microsoft.windowsazure.mobileservices.table.MobileServiceJsonTable;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
-import org.w3c.dom.Text;
-
-import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import static com.google.android.gms.internal.zzagz.runOnUiThread;
-
-public class RegisterActivity extends Activity implements View.OnClickListener {
+/**
+ * The {@link Activity} that allows the user to Register in the system by entering the desired credentials.
+ * @authors     Abdirahman Mohamed, Venet Kukran
+ */
+public class RegisterActivity extends Activity{
 
     private MobileServiceClient mClient;
     private EditText etName;
@@ -61,9 +51,29 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         etPin = findViewById(R.id.etPin);
         etConfirmPin = findViewById(R.id.etConfirmPin);
         btRegister = findViewById(R.id.btRegR);
-        btRegister.setOnClickListener(RegisterActivity.this);
+        btRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = etName.getText().toString();
+                String pin = etPin.getText().toString();
+                String confirm = etConfirmPin.getText().toString();
+                if( name.equals("") || pin.equals("") || confirm.equals("")){
+                    Toast.makeText(RegisterActivity.this, "Ensure all fields are filled in", Toast.LENGTH_LONG).show();
+                    registerError();
+                } else {
+                    register(name, Integer.parseInt(pin), Integer.parseInt(confirm));
+                }
+            }
+        });
         tvRegistered = findViewById(R.id.tvRegistered);
-        tvRegistered.setOnClickListener(RegisterActivity.this);
+        tvRegistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(login);
+                finish();
+            }
+        });
         instanceId = InstanceID.getInstance(this).getId();
         viewFlipper = (ViewFlipper) findViewById(R.id.registration_view_flipper);
         reloadRegistration = (TextView) findViewById(R.id.registration_error);
@@ -76,29 +86,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
     }
 
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.btRegR:
-                String name = etName.getText().toString();
-                String pin = etPin.getText().toString();
-                String confirm = etConfirmPin.getText().toString();
-                if( name.equals("") || pin.equals("") || confirm.equals("")){
-                    Toast.makeText(RegisterActivity.this, "Ensure all fields are filled in", Toast.LENGTH_LONG).show();
-                    registerError();
-                } else {
-                    register(name, Integer.parseInt(pin), Integer.parseInt(confirm));
-                }
-                break;
-            case R.id.tvRegistered:
-                login = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(login);
-                finish();
-                break;
-        }
-
-    }
-
+    /**
+     * Registers the User in the system by storing the entered user values in the Database
+     * @param name          Name entered by the User
+     * @param pin           Pin entered by the User
+     * @param confirm       Pin entered in the "Confirm Pin" EditText
+     */
     public void register(final String name, final int pin, final int confirm) {
         final PinAccess p = new PinAccess(name, pin, instanceId);
 
@@ -182,6 +175,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Checks whether the user can create the desired account with the data entered by checking for duplicates or errors
+     * @param users             List of PinAccess Objects that is cross-referenced
+     * @param name              Desired Name entered by the User
+     * @param pin               Desired Pin entered by the User
+     * @return  True if no clashes and the data is unique | False if data is duplicate or might cause clashes in the future
+     */
     private boolean canCreateNewAccount(List<PinAccess> users, String name, int pin){
         boolean toReturn = true;
 
@@ -210,6 +210,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Used to refresh the layout in the case of an error
+     */
     private void registerError() {
         etName.setText("");
         etPin.setText("");

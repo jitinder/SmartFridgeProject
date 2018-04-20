@@ -6,7 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-
+/**
+ * The Splash Screen shown when the Application first opens
+ *
+ * @author          Venet Kukran
+ */
 public class SplashActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

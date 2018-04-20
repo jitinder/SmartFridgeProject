@@ -1,27 +1,22 @@
 package com.example.android.team49;
 
-import android.accounts.Account;
-import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
+import android.app.Activity;
 import android.content.res.Configuration;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+/**
+ * The Main {@link Activity} which connects various fragments together
+ *
+ * @authors     Abdirahman Mohamed, Sidak Pasricha
+ */
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -120,6 +115,10 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Used to Store the Current Fragment in use before Orientation Change
+     * @param outState      Data that stores the state
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -130,6 +129,12 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles changes in Configuration. In this case, helps in handling Orientation Changes.
+     * Overrides {@link Activity#onConfigurationChanged(Configuration)}
+     *
+     * @param newConfig     The device configuration
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         switch(fragmentNumber){
@@ -151,13 +156,23 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inflate the menu, this adds items to the action bar if it is present.
+     * Overrides {@link Activity#onCreateOptionsMenu(android.view.Menu)}
+     *
+     * @param menu      The menu being implemented in the action bar
+     * @return          "true" to display selected menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu, this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.top_bar, menu);
         return true;
     }
 
+    /**
+     * Disables Back Button in this activity.
+     * Overrides {@link Activity#onBackPressed()}
+     */
     @Override
     public void onBackPressed() {
         // Do Here what ever you want do on back press;
