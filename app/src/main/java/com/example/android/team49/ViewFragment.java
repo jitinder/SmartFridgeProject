@@ -256,7 +256,7 @@ public class ViewFragment extends Fragment {
     private void getIngredients(final String instanceId){
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            ingredientsTable = msc.getTable(Ingredients.class);
             progressDialog = new ProgressDialog(getContext());
 
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

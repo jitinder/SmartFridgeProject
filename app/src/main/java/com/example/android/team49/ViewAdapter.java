@@ -100,7 +100,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            ingredientsTable = msc.getTable(Ingredients.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,7 +278,7 @@ public class ViewAdapter extends ArrayAdapter<Ingredients> {
     private void update(final Ingredients ingredient, final int quantity) {
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            ingredientsTable = msc.getTable(Ingredients.class);
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {

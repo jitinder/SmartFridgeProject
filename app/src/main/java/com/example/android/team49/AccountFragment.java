@@ -75,7 +75,7 @@ public class AccountFragment extends Fragment {
             e.printStackTrace();
         }
         pinTable = msc.getTable(PinAccess.class);
-        ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+        ingredientsTable = msc.getTable(Ingredients.class);
         greetingText = (TextView) view.findViewById(R.id.greeting_view);
         pinText = (TextView) view. findViewById(R.id.pin_view);
         changePinButton = (Button) view.findViewById(R.id.change_pin_button);
@@ -177,7 +177,7 @@ public class AccountFragment extends Fragment {
                             ViewFragment.results.clear();
                         }
                     }
-                    Toast.makeText(getContext(), "account reset.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Account Reset", Toast.LENGTH_LONG).show();
                 } catch (Exception e){
                     dialog.dismiss();
                     e.printStackTrace();

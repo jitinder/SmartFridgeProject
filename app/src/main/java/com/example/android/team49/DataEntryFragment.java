@@ -173,7 +173,7 @@ public class DataEntryFragment extends Fragment {
 
         try {
             msc = new MobileServiceClient("https://smartfridgeteam49.azurewebsites.net", getContext());
-            ingredientsTable = msc.getTable("ingredientstest", Ingredients.class);
+            ingredientsTable = msc.getTable(Ingredients.class);
             ingredientsTable.insert(ingredient);
 
             @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, Boolean> task = new AsyncTask<Void, Void, Boolean>() {
