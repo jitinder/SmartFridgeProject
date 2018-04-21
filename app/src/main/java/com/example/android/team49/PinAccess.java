@@ -1,7 +1,7 @@
 package com.example.android.team49;
 
 /**
- * Class used to Represent the Account details of an individiual
+ * Class used to Represent the Account details of an individual
  *
  * @authors         Abdirahman Mohamed, Venet Kukran
  */

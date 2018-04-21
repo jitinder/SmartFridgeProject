@@ -96,14 +96,19 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle("Ingredients for: \n" +r.getName());
-                    CharSequence[] ingredients = new CharSequence[r.getIngredients().size()];
-                    for(int i = 0; i < ingredients.length; i++){
-                        ingredients[i] = r.getIngredients().get(i);
+                    final ArrayList<IngredientPresence> ingredients = new ArrayList<>();
+                    for(int i = 0; i < r.getIngredients().size(); i++){
+                        ingredients.add(new IngredientPresence(r.getIngredients().get(i), checkIngredientPresence(r.getIngredients().get(i))));
+                        System.out.println(checkIngredientPresence(r.getIngredients().get(i)));
                     }
-                    builder.setItems(ingredients, new DialogInterface.OnClickListener() {
+                    builder.setAdapter(new IngredientAdapter(context, ingredients), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            String name = ingredients.get(which).getName();
+                            String url = "https://www.amazon.co.uk/s?url=search-alias%3Daps&field-keywords=" + name.replace(" ", "+");
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            context.startActivity(i);
                         }
                     });
                     builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
@@ -119,6 +124,25 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         }
 
         return v;
+    }
+
+    private boolean checkIngredientPresence(String ingName){
+        String[] split = ingName.split(" ");
+        for(int i = 0; i < split.length; i++){
+            split[i].replace(" ", "");
+            split[i] = split[i].toLowerCase();
+        }
+        for(int i = 0; i < split.length; i++){
+            for(int j = 0; j < ViewFragment.results.size(); j++){
+                System.out.print(split[i]);
+                System.out.println(ViewFragment.results.get(j).getName().toLowerCase());
+                if(split[i].equals(ViewFragment.results.get(j).getName().toLowerCase())
+                        || split[i].contains(ViewFragment.results.get(j).getName().toLowerCase())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
