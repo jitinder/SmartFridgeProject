@@ -3,6 +3,7 @@ This repository contains the source code for our App Development project [Module
 - to keep stock of items in the fridge
 - allow reordering of these items 
 - view possible recipes with the chosen items
+
 [Addition Complexity - Scan barcode to add item]
 
 It is written for Native Android.
